@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0f0f1e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>🎵 Music Player</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  :root {
+    --primary: #667eea;
+    --secondary: #764ba2;
+    --bg: #0f0f1e;
+    --card: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.1);
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.55);
+  }
+  
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+    position: fixed;
+    inset: 0;
+  }
+  
+  /* Nền động */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: -50%;
+    background: radial-gradient(circle at 30% 20%, rgba(102,126,234,0.25), transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(118,75,162,0.25), transparent 50%);
+    animation: floatBg 20s ease-in-out infinite;
+    z-index: 0;
+  }
+  
+  @keyframes floatBg {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-5%, 5%) scale(1.1); }
+  }
+  
+  .player {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 16px) 20px calc(env(safe-area-inset-bottom) + 16px);
+  }
+  
+  /* Vùng cover + info */
+  .top-section {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8px;
+  }
+  
+  .cover-wrap {
+    position: relative;
+    width: min(60vw, 220px);
+    aspect-ratio: 1;
+    margin-bottom: 20px;
+  }
+  
+  .cover {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5), 0 0 0 6px rgba(255,255,255,0.03);
+    position: relative;
+  }
+  
+  .cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .cover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(0,0,0,0.4) 100%);
+    pointer-events: none;
+  }
+  
+  /* Hiệu ứng xoay đĩa */
+  .cover.playing {
+    animation: spin 12s linear infinite;
+  }
+  
+  .cover.paused {
+    animation-play-state: paused;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Lỗ giữa đĩa */
+  .cover-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    background: var(--bg);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+    z-index: 2;
+  }
+  
+  .song-title {
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .song-artist {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+  }
+  
+  /* Progress */
+  .progress-container {
+    width: 100%;
+    margin-bottom: 14px;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    touch-action: none;
+    position: relative;
+  }
+  
+  .progress-track {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    position: relative;
+    overflow: visible;
+  }
+  
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+    width: 0%;
+    position: relative;
+    pointer-events: none;
+  }
+  
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  
+  .progress-bar:hover .progress-fill::after,
+  .progress-bar.dragging .progress-fill::after {
+    opacity: 1;
+  }
+  
+  .time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-variant-numeric: tabular-nums;
+  }
+  
+  /* Controls */
+  .controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 14px;
+    flex-shrink: 0;
+  }
+  
+  .btn {
+    background: transparent;
+    border: none;
+    color: var(--text);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  
+  .btn svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+  
+  .btn:active {
+    transform: scale(0.9);
+    background: rgba(255,255,255,0.1);
+  }
+  
+  .btn-secondary {
+    color: var(--text-dim);
+  }
+  
+  .btn-secondary.active {
+    color: var(--primary);
+  }
+  
+  .btn-play {
+    width: 62px;
+    height: 62px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    box-shadow: 0 8px 24px rgba(102,126,234,0.45);
+  }
+  
+  .btn-play svg {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .btn-play:active {
+    transform: scale(0.92);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+  }
+  
+  /* Playlist */
+  .playlist-wrap {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  
+  .playlist-header {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+    padding-left: 4px;
+    flex-shrink: 0;
+  }
+  
+  .playlist {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: 8px;
+  }
+  
+  .playlist::-webkit-scrollbar { width: 4px; }
+  .playlist::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  
+  .playlist-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    margin-bottom: 2px;
+  }
+  
+  .playlist-item:active {
+    background: rgba(255,255,255,0.08);
+  }
+  
+  .playlist-item.active {
+    background: rgba(102,126,234,0.18);
+  }
+  
+  .item-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  
+  .item-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .item-info {
+    flex: 1;
+    margin-left: 12px;
+    min-width: 0;
+  }
+  
+  .item-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .playlist-item.active .item-title {
+    color: var(--primary);
+  }
+  
+  .item-artist {
+    font-size: 11.5px;
+    color: var(--text-dim);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 2px;
+  }
+  
+  /* Indicator đang phát */
+  .playing-indicator {
+    display: none;
+    gap: 2px;
+    align-items: flex-end;
+    height: 14px;
+    margin-left: 8px;
+    flex-shrink: 0;
+  }
+  
+  .playlist-item.active .playing-indicator {
+    display: flex;
+  }
+  
+  .playing-indicator span {
+    width: 3px;
+    background: var(--primary);
+    border-radius: 1.5px;
+    animation: equalize 0.8s ease-in-out infinite;
+  }
+  
+  .playing-indicator span:nth-child(1) { height: 40%; animation-delay: 0s; }
+  .playing-indicator span:nth-child(2) { height: 80%; animation-delay: 0.2s; }
+  .playing-indicator span:nth-child(3) { height: 55%; animation-delay: 0.4s; }
+  
+  .playlist-item.paused .playing-indicator span {
+    animation-play-state: paused;
+  }
+  
+  @keyframes equalize {
+    0%, 100% { transform: scaleY(0.4); }
+    50% { transform: scaleY(1); }
+  }
+  
+  /* Nút bật âm thanh (cho autoplay bị chặn) */
+  .unmute-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .unmute-overlay.show {
+    display: flex;
+  }
+  
+  .unmute-btn {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 10px 40px rgba(102,126,234,0.6);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .unmute-btn svg {
+    width: 42px;
+    height: 42px;
+    fill: #fff;
+  }
+  
+  .unmute-btn:active {
+    transform: scale(0.95);
+  }
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 10px 40px rgba(102,126,234,0.6); }
+    50% { transform: scale(1.05); box-shadow: 0 10px 50px rgba(102,126,234,0.9); }
+  }
+  
+  .unmute-text {
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    max-width: 280px;
+    line-height: 1.5;
+  }
+  
+  /* Responsive: màn hình thấp thì thu gọn */
+  @media (max-height: 700px) {
+    .cover-wrap { width: min(45vw, 160px); margin-bottom: 12px; }
+    .song-title { font-size: 16px; }
+    .btn-play { width: 54px; height: 54px; }
+    .btn-play svg { width: 22px; height: 22px; }
+    .controls { gap: 14px; margin-bottom: 10px; }
+  }
+  
+  @media (max-height: 600px) {
+    .cover-wrap { width: min(38vw, 130px); margin-bottom: 8px; }
+    .song-artist { margin-bottom: 10px; }
+  }
+  
+  /* Loading */
+  .loading-dot {
+    display: inline-block;
+    animation: blink 1.2s infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+</style>
+</head>
+<body>
+
+<div class="player">
+  
+  <div class="top-section">
+    <div class="cover-wrap">
+      <div class="cover" id="cover">🎵</div>
+    </div>
+    
+    <div class="song-title" id="songTitle">Đang tải playlist...</div>
+    <div class="song-artist" id="songArtist">Vui lòng chờ</div>
+    
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-track">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+      <div class="time-display">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <button class="btn btn-secondary" id="shuffleBtn" title="Ngẫu nhiên">
+        <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      </button>
+      <button class="btn" id="prevBtn" title="Bài trước">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="btn btn-play" id="playBtn" title="Phát">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="btn" id="nextBtn" title="Bài tiếp">
+        <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+      </button>
+      <button class="btn btn-secondary" id="repeatBtn" title="Lặp lại">
+        <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+      </button>
+    </div>
+  </div>
+  
+  <div class="playlist-wrap">
+    <div class="playlist-header">Danh sách phát · <span id="playlistCount">0</span> bài</div>
+    <div class="playlist" id="playlistList"></div>
+  </div>
+  
+</div>
+
+<audio id="audio" preload="auto" playsinline webkit-playsinline crossorigin="anonymous"></audio>
+
+<!-- Overlay cho autoplay bị chặn -->
+<div class="unmute-overlay" id="unmuteOverlay">
+  <button class="unmute-btn" id="unmuteBtn">
+    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  </button>
+  <div class="unmute-text">
+    Nhấn để bắt đầu phát nhạc 🎶<br>
+    <small style="opacity:0.6;font-size:12px;">Trình duyệt yêu cầu tương tác để phát âm thanh</small>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// CẤU HÌNH PLAYLIST
+// ============================================================
+// GitHub Raw URL format:
+// https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/PATH/FILE.mp3
+// Hoặc dùng: https://USERNAME.github.io/REPO/PATH/FILE.mp3 (GitHub Pages - nhanh hơn)
+
+const CONFIG = {
+  // Thông tin GitHub của bạn
+  githubUser: 'USERNAME',
+  githubRepo: 'REPO_NAME',
+  branch: 'main',
+  
+  // Đường dẫn tới thư mục chứa nhạc trong repo (để trống nếu ở gốc)
+  musicPath: 'music',
+  
+  // Danh sách bài hát - CHỈ CẦN TÊN FILE, tool tự tạo URL
+  // Ví dụ: file "song1.mp3" trong folder music/ của repo
+  songs: [
+    { file: 'song1.mp3', title: 'Tên bài hát 1', artist: 'Ca sĩ 1' },
+    { file: 'song2.mp3', title: 'Tên bài hát 2', artist: 'Ca sĩ 2' },
+    { file: 'song3.mp3', title: 'Tên bài hát 3', artist: 'Ca sĩ 3' },
+  ],
+  
+  // Nếu muốn dùng URL đầy đủ thay vì cấu hình trên, thêm "url" vào từng bài:
+  // { url: 'https://raw.githubusercontent.com/...', title: '...', artist: '...' }
+  
+  autoPlay: true,           // Tự động phát khi vào trang (có thể bị chặn)
+  defaultVolume: 0.8,       // Âm lượng mặc định (0-1)
+};
+
+// ============================================================
+// XÂY DỰNG URL TỪ CẤU HÌNH
+// ============================================================
+function buildUrl(song) {
+  if (song.url) return song.url;
+  
+  const base = `https://raw.githubusercontent.com/${CONFIG.githubUser}/${CONFIG.githubRepo}/${CONFIG.branch}`;
+  const path = CONFIG.musicPath ? `${CONFIG.musicPath}/` : '';
+  // Encode tên file để xử lý ký tự đặc biệt và khoảng trắng
+  return `${base}/${path}${encodeURIComponent(song.file)}`;
+}
+
+// Tạo mảng playlist hoàn chỉnh
+const playlist = CONFIG.songs.map(s => ({
+  title: s.title || s.file.replace(/\.mp3$/i, ''),
+  artist: s.artist || '',
+  url: buildUrl(s),
+  cover: s.cover || '',
+}));
+
+// ============================================================
+// KHỞI TẠO
+// ============================================================
+const audio = document.getElementById('audio');
+const playBtn = document.getElementById('playBtn');
+const playIcon = document.getElementById('playIcon');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const shuffleBtn = document.getElementById('shuffleBtn');
+const repeatBtn = document.getElementById('repeatBtn');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const songTitle = document.getElementById('songTitle');
+const songArtist = document.getElementById('songArtist');
+const cover = document.getElementById('cover');
+const playlistList = document.getElementById('playlistList');
+const playlistCount = document.getElementById('playlistCount');
+const unmuteOverlay = document.getElementById('unmuteOverlay');
+const unmuteBtn = document.getElementById('unmuteBtn');
+
+let currentIndex = 0;
+let isPlaying = false;
+let isSeeking = false;
+let shuffleMode = false;
+let repeatMode = 'none'; // 'none' | 'all' | 'one'
+let history = []; // lịch sử phát cho shuffle
+
+audio.volume = CONFIG.defaultVolume;
+
+// Icon SVG
+const ICONS = {
+  play: '<path d="M8 5v14l11-7z"/>',
+  pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>',
+  volume: '<path d="M3 9v6h4l5 5V4L7 9H3z"/>',
+};
+
+// ============================================================
+// HIỂN THỊ PLAYLIST
+// ============================================================
+function renderPlaylist() {
+  playlistCount.textContent = playlist.length;
+  playlistList.innerHTML = '';
+  
+  playlist.forEach((song, index) => {
+    const item = document.createElement('div');
+    item.className = 'playlist-item' + (index === currentIndex ? ' active' : '');
+    item.dataset.index = index;
+    
+    const coverContent = song.cover 
+      ? `<img src="${song.cover}" alt="" loading="lazy">` 
+      : '🎵';
+    
+    item.innerHTML = `
+      <div class="item-cover">${coverContent}</div>
+      <div class="item-info">
+        <div class="item-title">${escapeHtml(song.title)}</div>
+        <div class="item-artist">${escapeHtml(song.artist || 'Không rõ')}</div>
+      </div>
+      <div class="playing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+    `;
+    
+    item.addEventListener('click', () => {
+      if (index === currentIndex) {
+        togglePlay();
+      } else {
+        loadSong(index, true);
+      }
+    });
+    
+    playlistList.appendChild(item);
+  });
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+// ============================================================
+// TẢI BÀI HÁT
+// ============================================================
+function loadSong(index, autoPlay = false) {
+  if (index < 0 || index >= playlist.length) return;
+  
+  currentIndex = index;
+  const song = playlist[index];
+  
+  songTitle.textContent = song.title;
+  songArtist.textContent = song.artist || 'Không rõ';
+  
+  if (song.cover) {
+    cover.innerHTML = `<img src="${song.cover}" alt="">`;
+  } else {
+    cover.innerHTML = '🎵';
+    cover.style.background = `linear-gradient(135deg, hsl(${(index * 47) % 360}, 70%, 60%), hsl(${(index * 47 + 60) % 360}, 70%, 50%))`;
+  }
+  
+  // Reset progress
+  progressFill.style.width = '0%';
+  currentTimeEl.textContent = '0:00';
+  totalTimeEl.textContent = '0:00';
+  
+  audio.src = song.url;
+  audio.load();
+  
+  updatePlaylistUI();
+  
+  if (autoPlay) {
+    playSong();
+  }
+}
+
+// ============================================================
+// ĐIỀU KHIỂN PHÁT / DỪNG
+// ============================================================
+function playSong() {
+  const playPromise = audio.play();
+  
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      setPlayingState(true);
+      hideUnmuteOverlay();
+    }).catch(err => {
+      console.warn('Autoplay bị chặn:', err);
+      setPlayingState(false);
+      // Chỉ hiện overlay nếu là lỗi autoplay
+      if (err.name === 'NotAllowedError') {
+        showUnmuteOverlay();
+      } else {
+        console.error('Lỗi phát:', err);
+        songTitle.textContent = '⚠️ Không thể phát';
+        songArtist.textContent = 'Kiểm tra URL file';
+      }
+    });
+  }
+}
+
+function pauseSong() {
+  audio.pause();
+  setPlayingState(false);
+}
+
+function togglePlay() {
+  if (isPlaying) pauseSong();
+  else playSong();
+}
+
+function setPlayingState(playing) {
+  isPlaying = playing;
+  playIcon.innerHTML = playing ? ICONS.pause : ICONS.play;
+  playBtn.title = playing ? 'Tạm dừng' : 'Phát';
+  
+  if (playing) {
+    cover.classList.add('playing');
+    cover.classList.remove('paused');
+  } else {
+    cover.classList.add('paused');
+  }
+  
+  updatePlaylistUI();
+}
+
+// ============================================================
+// CHUYỂN BÀI
+// ============================================================
+function nextSong(auto = false) {
+  if (repeatMode === 'one' && auto) {
+    audio.currentTime = 0;
+    playSong();
+    return;
+  }
+  
+  if (shuffleMode && playlist.length > 1) {
+    history.push(currentIndex);
+    let randomIndex;
+    let attempts = 0;
+    do {
+      randomIndex = Math.floor(Math.random() * playlist.length);
+      attempts++;
+    } while (randomIndex === currentIndex && attempts < 20);
+    loadSong(randomIndex, true);
+  } else {
+    const next = (currentIndex + 1) % playlist.length;
+    if (next === 0 && repeatMode === 'none' && auto) {
+      pauseSong();
+      loadSong(0, false);
+      return;
+    }
+    loadSong(next, true);
+  }
+}
+
+function prevSong() {
+  // Nếu đang phát quá 3 giây, quay về đầu bài
+  if (audio.currentTime > 3) {
+    audio.currentTime = 0;
+    return;
+  }
+  
+  if (shuffleMode && history.length > 0) {
+    const prevIndex = history.pop();
+    loadSong(prevIndex, true);
+  } else {
+    const prev = (currentIndex - 1 + playlist.length) % playlist.length;
+    loadSong(prev, true);
+  }
+}
+
+// ============================================================
+// CẬP NHẬT UI
+// ============================================================
+function updatePlaylistUI() {
+  const items = playlistList.querySelectorAll('.playlist-item');
+  items.forEach((item, index) => {
+    item.classList.toggle('active', index === currentIndex);
+    item.classList.toggle('paused', !isPlaying);
+  });
+}
+
+function formatTime(seconds) {
+  if (isNaN(seconds) || !isFinite(seconds)) return '0:00';
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${m}:${s.toString().padStart(2, '0')}`;
+}
+
+// ============================================================
+// SỰ KIỆN AUDIO
+// ============================================================
+playBtn.addEventListener('click', togglePlay);
+nextBtn.addEventListener('click', () => nextSong(false));
+prevBtn.addEventListener('click', prevSong);
+
+audio.addEventListener('timeupdate', () => {
+  if (!isSeeking && audio.duration && isFinite(audio.duration)) {
+    const percent = (audio.currentTime / audio.duration) * 100;
+    progressFill.style.width = percent + '%';
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+  }
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  totalTimeEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener('ended', () => {
+  if (repeatMode === 'one') {
+    audio.currentTime = 0;
+    playSong();
+  } else {
+    nextSong(true);
+  }
+});
+
+audio.addEventListener('play', () => setPlayingState(true));
+audio.addEventListener('pause', () => setPlayingState(false));
+audio.addEventListener('error', (e) => {
+  console.error('Audio error:', audio.error);
+  songTitle.textContent = '⚠️ Lỗi tải file';
+  songArtist.textContent = 'Kiểm tra URL và quyền truy cập';
+  setPlayingState(false);
+});
+
+audio.addEventListener('waiting', () => {
+  songArtist.textContent = '⏳ Đang tải...';
+});
+
+audio.addEventListener('canplay', () => {
+  const song = playlist[currentIndex];
+  if (song) songArtist.textContent = song.artist || 'Không rõ';
+});
+
+// ============================================================
+// TUA NHẠC (hỗ trợ cảm ứng)
+// ============================================================
+function seekFromEvent(e) {
+  const rect = progressBar.getBoundingClientRect();
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  
+  if (audio.duration && isFinite(audio.duration)) {
+    audio.currentTime = percent * audio.duration;
+    progressFill.style.width = (percent * 100) + '%';
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+  }
+}
+
+progressBar.addEventListener('mousedown', (e) => {
+  isSeeking = true;
+  progressBar.classList.add('dragging');
+  seekFromEvent(e);
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (isSeeking) seekFromEvent(e);
+});
+
+document.addEventListener('mouseup', () => {
+  if (isSeeking) {
+    isSeeking = false;
+    progressBar.classList.remove('dragging');
+  }
+});
+
+progressBar.addEventListener('touchstart', (e) => {
+  isSeeking = true;
+  progressBar.classList.add('dragging');
+  seekFromEvent(e);
+}, { passive: true });
+
+progressBar.addEventListener('touchmove', (e) => {
+  if (isSeeking) seekFromEvent(e);
+}, { passive: true });
+
+progressBar.addEventListener('touchend', () => {
+  isSeeking = false;
+  progressBar.classList.remove('dragging');
+});
+
+// ============================================================
+// SHUFFLE & REPEAT
+// ============================================================
+shuffleBtn.addEventListener('click', () => {
+  shuffleMode = !shuffleMode;
+  shuffleBtn.classList.toggle('active', shuffleMode);
+  history = [];
+});
+
+repeatBtn.addEventListener('click', () => {
+  const modes = ['none', 'all', 'one'];
+  const current = modes.indexOf(repeatMode);
+  repeatMode = modes[(current + 1) % modes.length];
+  
+  repeatBtn.classList.toggle('active', repeatMode !== 'none');
+  // Đổi icon cho chế độ repeat one
+  if (repeatMode === 'one') {
+    repeatBtn.querySelector('svg').innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4zM13 15V9h-1l-2 1v1h1.5v4H13z"/>';
+  } else {
+    repeatBtn.querySelector('svg').innerHTML = '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>';
+  }
+});
+
+// ============================================================
+// UNMUTE OVERLAY (khi autoplay bị chặn)
+// ============================================================
+function showUnmuteOverlay() {
+  unmuteOverlay.classList.add('show');
+}
+
+function hideUnmuteOverlay() {
+  unmuteOverlay.classList.remove('show');
+}
+
+unmuteBtn.addEventListener('click', () => {
+  hideUnmuteOverlay();
+  playSong();
+});
+
+// ============================================================
+// PHÍM TẮT (desktop)
+// ============================================================
+document.addEventListener('keydown', (e) => {
+  if (e.target.matches('input, textarea')) return;
+  
+  switch (e.code) {
+    case 'Space':
+      e.preventDefault();
+      togglePlay();
+      break;
+    case 'ArrowRight':
+      e.preventDefault();
+      nextSong(false);
+      break;
+    case 'ArrowLeft':
+      e.preventDefault();
+      prevSong();
+      break;
+  }
+});
+
+// ============================================================
+// MEDIA SESSION API (điều khiển từ lock screen / tai nghe)
+// ============================================================
+if ('mediaSession' in navigator) {
+  const updateMediaSession = () => {
+    const song = playlist[currentIndex];
+    if (!song) return;
+    
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: song.title,
+      artist: song.artist || 'Không rõ',
+      album: 'My Playlist',
+      artwork: song.cover ? [
+        { src: song.cover, sizes: '512x512', type: 'image/jpeg' }
+      ] : []
+    });
+  };
+  
+  navigator.mediaSession.setActionHandler('play', () => playSong());
+  navigator.mediaSession.setActionHandler('pause', () => pauseSong());
+  navigator.mediaSession.setActionHandler('previoustrack', () => prevSong());
+  navigator.mediaSession.setActionHandler('nexttrack', () => nextSong(false));
+  navigator.mediaSession.setActionHandler('seekto', (details) => {
+    if (details.seekTime !== undefined) audio.currentTime = details.seekTime;
+  });
+  
+  // Cập nhật metadata mỗi khi đổi bài
+  const originalLoadSong = loadSong;
+  loadSong = function(index, autoPlay) {
+    originalLoadSong(index, autoPlay);
+    updateMediaSession();
+  };
+}
+
+// ============================================================
+// KHỞI ĐỘNG
+// ============================================================
+function init() {
+  renderPlaylist();
+  loadSong(0, false);
+  
+  // Thử autoplay
+  if (CONFIG.autoPlay) {
+    // Đợi một chút để src được set
+    setTimeout(() => {
+      playSong();
+    }, 100);
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
