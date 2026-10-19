@@ -10,17 +10,17 @@
   <title>LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao</title>
   <meta name="description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay, cập nhật liên tục tại LePhiPhi.Com. Trải nghiệm nghe nhạc mượt mà trên mọi thiết bị.">
   <meta name="keywords" content="nghe nhạc, nhạc online, playlist, nhạc miễn phí, LePhiPhi, music player, nghe nhạc online">
-  <meta name="author" content="Nhac.LePhiPhi.Com">
+  <meta name="author" content="LePhiPhi.Com">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0f0f1e">
-  <link rel="canonical" href="https://nhac.lephiphi.com/">
+  <link rel="canonical" href="https://lephiphi.com/">
 
   <!-- Open Graph (Facebook, Zalo) -->
   <meta property="og:type" content="music.playlist">
-  <meta property="og:site_name" content="Nhac.LePhiPhi.Com">
-  <meta property="og:title" content="Nhac.LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao">
+  <meta property="og:site_name" content="LePhiPhi.Com">
+  <meta property="og:title" content="LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao">
   <meta property="og:description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay cập nhật liên tục.">
-  <meta property="og:url" content="https://nhac.lephiphi.com/">
+  <meta property="og:url" content="https://lephiphi.com/">
   <meta property="og:image" content="/logo.png">
   <meta property="og:image:width" content="512">
   <meta property="og:image:height" content="512">
@@ -28,7 +28,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Nhac.LePhiPhi.Com - Nghe Nhạc Online">
+  <meta name="twitter:title" content="LePhiPhi.Com - Nghe Nhạc Online">
   <meta name="twitter:description" content="Playlist nhạc hay miễn phí, chất lượng cao.">
   <meta name="twitter:image" content="/logo.png">
 
@@ -86,17 +86,17 @@
   .top-section { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 8px; }
   
   /* LOGO VỚI ẢNH THẬT */
-  .logo-wrap {
-    position: relative; width: min(65vw, 240px); aspect-ratio: 1;
-    margin-bottom: 20px; display: flex; align-items: center; justify-content: center;
-  }
+ .logo-wrap {
+  position: relative; width: min(32.5vw, 120px); aspect-ratio: 1;
+  margin-bottom: 20px; display: flex; align-items: center; justify-content: center;
+}
   .logo-wrap::before {
-    content: ''; position: absolute; inset: -12px; border-radius: 50%;
-    background: conic-gradient(from 0deg, transparent 0deg, rgba(102,126,234,0.6) 60deg,
-      rgba(0,212,255,0.8) 180deg, rgba(118,75,162,0.6) 300deg, transparent 360deg);
-    opacity: 0; transition: opacity 0.4s; animation: rotateRing 3s linear infinite;
-    z-index: 0; filter: blur(8px);
-  }
+  content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  background: conic-gradient(from 0deg, transparent 0deg, rgba(102,126,234,0.6) 60deg,
+    rgba(0,212,255,0.8) 180deg, rgba(118,75,162,0.6) 300deg, transparent 360deg);
+  opacity: 0; transition: opacity 0.4s; animation: rotateRing 3s linear infinite;
+  z-index: 0; filter: blur(6px);
+}
   .logo-wrap.playing::before { opacity: 1; }
   @keyframes rotateRing { from{transform:rotate(0)} to{transform:rotate(360deg)} }
   
@@ -135,13 +135,13 @@
   }
   
   .logo-waves {
-    position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 3px; align-items: flex-end; height: 18px; z-index: 4;
-  }
+  position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 2px; align-items: flex-end; height: 12px; z-index: 4;
+}
   .logo-waves span {
-    width: 3px; background: linear-gradient(to top, var(--primary), var(--accent));
-    border-radius: 2px; height: 30%; opacity: 0.85;
-  }
+  width: 2px; background: linear-gradient(to top, var(--primary), var(--accent));
+  border-radius: 2px; height: 30%; opacity: 0.85;
+}
   .logo-wrap.playing .logo-waves span { animation: wave 1s ease-in-out infinite; }
   .logo-waves span:nth-child(1){animation-delay:0s}
   .logo-waves span:nth-child(2){animation-delay:0.1s}
@@ -153,16 +153,16 @@
   @keyframes wave { 0%,100%{height:30%;opacity:0.6} 50%{height:100%;opacity:1} }
   
   .center-hole {
-    position: absolute; top: 50%; left: 50%; width: 22px; height: 22px;
-    background: radial-gradient(circle, #0a0a18 30%, #1e1e3a 100%);
-    border-radius: 50%; transform: translate(-50%, -50%);
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.9), 0 0 0 3px rgba(255,255,255,0.05); z-index: 5;
-  }
-  .center-hole::after {
-    content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px;
-    background: var(--primary); border-radius: 50%; transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px var(--primary);
-  }
+  position: absolute; top: 50%; left: 50%; width: 12px; height: 12px;
+  background: radial-gradient(circle, #0a0a18 30%, #1e1e3a 100%);
+  border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.9), 0 0 0 3px rgba(255,255,255,0.05); z-index: 5;
+}
+.center-hole::after {
+  content: ''; position: absolute; top: 50%; left: 50%; width: 4px; height: 4px;
+  background: var(--primary); border-radius: 50%; transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px var(--primary);
+}
   
   .song-title {
     font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px;
@@ -362,126 +362,19 @@
   }
   
   @media (max-height: 700px) {
-    .logo-wrap { width: min(48vw, 170px); margin-bottom: 12px; }
+    .logo-wrap { width: min(24vw, 85px); margin-bottom: 12px; }
     .song-title { font-size: 16px; }
     .btn-play { width: 54px; height: 54px; }
     .btn-play svg { width: 22px; height: 22px; }
     .controls { gap: 14px; margin-bottom: 10px; }
-    .center-hole { width: 16px; height: 16px; }
-    .logo-waves { height: 14px; }
+    .center-hole { width: 9px; height: 9px; }
+     .logo-waves { height: 9px; }
     .install-btn { width: 52px; height: 52px; }
     .install-btn svg { width: 22px; height: 22px; }
   }
   @media (max-height: 600px) {
-    .logo-wrap { width: min(40vw, 130px); margin-bottom: 8px; }
+     .logo-wrap { width: min(20vw, 65px); margin-bottom: 8px; }
     .song-artist { margin-bottom: 10px; }
-  }
-
-  /* ═══════════════════════════════════════════════════════════
-     COMPACT MODE - LOGO THU NHỎ KHI CUỘN XUỐNG
-     ═══════════════════════════════════════════════════════════ */
-  .logo-wrap {
-    transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .song-title {
-    transition: font-size 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .song-artist {
-    transition: font-size 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .progress-container {
-    transition: margin-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .controls {
-    transition: gap 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                margin-bottom 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .btn {
-    transition: transform 0.15s, background 0.15s,
-                width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .btn svg {
-    transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .btn-play {
-    transition: transform 0.15s,
-                box-shadow 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .btn-play svg {
-    transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .center-hole {
-    transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
-                height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .logo-waves {
-    transition: height 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-  .logo-waves span {
-    transition: width 0.32s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  /* ─── TRẠNG THÁI COMPACT ─── */
-  .player.compact .logo-wrap {
-    width: min(22vw, 76px);
-    margin-bottom: 8px;
-  }
-  .player.compact .song-title {
-    font-size: 14px;
-    margin-bottom: 2px;
-  }
-  .player.compact .song-artist {
-    font-size: 11px;
-    margin-bottom: 10px;
-  }
-  .player.compact .progress-container {
-    margin-bottom: 10px;
-  }
-  .player.compact .controls {
-    gap: 12px;
-    margin-bottom: 10px;
-  }
-  .player.compact .btn {
-    width: 36px;
-    height: 36px;
-  }
-  .player.compact .btn svg {
-    width: 18px;
-    height: 18px;
-  }
-  .player.compact .btn-play {
-    width: 50px;
-    height: 50px;
-    box-shadow: 0 6px 18px rgba(102,126,234,0.4);
-  }
-  .player.compact .btn-play svg {
-    width: 22px;
-    height: 22px;
-  }
-  .player.compact .center-hole {
-    width: 14px;
-    height: 14px;
-  }
-  .player.compact .center-hole::after {
-    width: 4px;
-    height: 4px;
-  }
-  .player.compact .logo-waves {
-    height: 12px;
-  }
-  .player.compact .logo-waves span {
-    width: 2px;
-  }
-  .player.compact .top-section {
-    padding-top: 0;
   }
 </style>
 </head>
@@ -489,7 +382,7 @@
 
 <h1 class="sr-only">LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao Miễn Phí</h1>
 
-<div class="player" id="player">
+<div class="player">
   <div class="top-section">
     <div class="logo-wrap" id="logoWrap">
       <div class="logo-disc">
@@ -571,7 +464,7 @@ const CONFIG = {
   
   // Danh sách bài hát - dán link MP3 trực tiếp
   songs: [
-    { url: '/list/DungYeuNuaEmMetRoi.mp3', title: 'Đừng Yêu Nữa Em Mệt Rồi', artist: 'Min' },
+   { url: '/list/DungYeuNuaEmMetRoi.mp3', title: 'Đừng Yêu Nữa Em Mệt Rồi', artist: 'Min' },
     { url: '/list/nghidenngaychungtasegia.mp3', title: 'Nghĩ Đến Ngày Chúng Ta Sẽ Già', artist: 'Unknow' },
     { url: '/list/khongmondanghodoi.mp3', title: 'Không Môn Đăng Hộ Đối', artist: 'Nguyên Vĩ' },
     { url: '/list/laviem.mp3', title: 'LAVIEM', artist: 'Quang Hùng Master D' },
@@ -663,7 +556,6 @@ const logoInner = document.getElementById('logoInner');
 const logoImg = document.getElementById('logoImg');
 const installBtn = document.getElementById('installBtn');
 const installTooltip = document.getElementById('installTooltip');
-const playerEl = document.getElementById('player');
 
 // Set ảnh logo
 if (CONFIG.logoUrl) logoImg.src = CONFIG.logoUrl;
@@ -875,30 +767,6 @@ document.addEventListener('mouseup', () => { if (isSeeking) { isSeeking = false;
 progressBar.addEventListener('touchstart', (e) => { isSeeking = true; progressBar.classList.add('dragging'); seekFromEvent(e); }, { passive: true });
 progressBar.addEventListener('touchmove', (e) => { if (isSeeking) seekFromEvent(e); }, { passive: true });
 progressBar.addEventListener('touchend', () => { isSeeking = false; progressBar.classList.remove('dragging'); });
-
-// ══════════════════════════════════════════════════════════
-// COMPACT MODE - LOGO THU NHỎ KHI CUỘN XUỐNG
-// ══════════════════════════════════════════════════════════
-const COMPACT_ON  = 60;   // cuộn quá 60px thì thu nhỏ
-const COMPACT_OFF = 20;   // cuộn về dưới 20px thì mở lại (hysteresis)
-const SAFE_ROOM   = 180;  // cần đủ chỗ cuộn để tránh bị "kẹt" scroll
-let compactMode = false;
-
-playlistList.addEventListener('scroll', () => {
-  const st = playlistList.scrollTop;
-
-  if (!compactMode && st > COMPACT_ON) {
-    // Chỉ kích hoạt khi danh sách còn đủ dài để không bị clamp scroll
-    const maxScroll = playlistList.scrollHeight - playlistList.clientHeight;
-    if (maxScroll - st > SAFE_ROOM) {
-      compactMode = true;
-      playerEl.classList.add('compact');
-    }
-  } else if (compactMode && st < COMPACT_OFF) {
-    compactMode = false;
-    playerEl.classList.remove('compact');
-  }
-}, { passive: true });
 
 // SHUFFLE / REPEAT
 shuffleBtn.addEventListener('click', () => {
