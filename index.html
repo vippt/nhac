@@ -12,16 +12,13 @@
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0f0f1e">
   <link rel="canonical" href="https://nhac.lephiphi.com/">
-  <!-- Favicon chuẩn (ICO) cho các trình duyệt cũ -->
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   
-  <!-- Favicon chính dạng PNG (Khuyên dùng kích thước 32x32 hoặc 16x16 px) -->
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  
-  <!-- Biểu tượng cho thiết bị Apple (iPhone/iPad - Kích thước 180x180 px) -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <meta property="og:image" content="/logo.png">
+  
   <!-- Open Graph -->
   <meta property="og:type" content="music.playlist">
   <meta property="og:site_name" content="Nhac.LePhiPhi.Com">
@@ -491,15 +488,19 @@ const manifestData = {
 const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
 document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
 
-// Register SW
+// Register SW - Đã tối ưu hóa tránh lỗi cache file MP3 khi chạy ngầm
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   const swCode = `
     self.addEventListener('install', e => self.skipWaiting());
     self.addEventListener('activate', e => self.clients.claim());
     self.addEventListener('fetch', e => {
       if (e.request.method !== 'GET') return;
+      if (e.request.url.endsWith('.mp3') || e.request.destination === 'audio') {
+        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+        return;
+      }
       e.respondWith(
-        caches.match(e.request).then(cached => cached || fetch(e.request).catch(() => cached))
+        caches.match(e.request).then(cached => cached || fetch(e.request))
       );
     });
   `;
@@ -553,7 +554,7 @@ let wakeLock = null;
 audio.volume = CONFIG.defaultVolume;
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
-// Wake Lock để giữ màn hình/tiến trình hoạt động
+// Wake Lock để giữ tiến trình hoạt động
 async function requestWakeLock() {
   if ('wakeLock' in navigator && document.visibilityState === 'visible') {
     try {
@@ -571,6 +572,10 @@ function releaseWakeLock() {
 document.addEventListener('visibilitychange', async () => {
   if (wakeLock !== null && document.visibilityState === 'visible') {
     await requestWakeLock();
+  }
+  // Khi bật lại màn hình, nếu audio báo đang chạy nhưng đứt tiếng, trigger lại play nhẹ nhàng
+  if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
+    audio.play().catch(() => {});
   }
 });
 
@@ -609,7 +614,7 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// LOAD / PLAY / PAUSE
+// LOAD / PLAY / PAUSE - ĐÃ TỐI ƯU HÓA TẢI FILE KHI TẮT MÀN HÌNH
 function loadSong(index, autoPlay = false) {
   if (index < 0 || index >= playlist.length) return;
   currentIndex = index;
@@ -619,11 +624,20 @@ function loadSong(index, autoPlay = false) {
   progressFill.style.width = '0%';
   currentTimeEl.textContent = '0:00';
   totalTimeEl.textContent = '0:00';
+  
+  // Reset audio hoàn toàn
+  audio.pause();
   audio.src = song.url;
   audio.load();
+  
   updatePlaylistUI();
   updateMediaSession();
-  if (autoPlay) playSong();
+  
+  if (autoPlay) {
+    setTimeout(() => {
+      playSong();
+    }, 200);
+  }
 }
 
 function playSong() {
@@ -744,7 +758,6 @@ if ('mediaSession' in navigator) {
   });
   navigator.mediaSession.setActionHandler('nexttrack', () => {
     nextSong(false);
-    setTimeout(() => playSong(), 200);
   });
   navigator.mediaSession.setActionHandler('seekto', (details) => {
     if (details.seekTime !== undefined && audio.duration) {
@@ -788,7 +801,7 @@ audio.addEventListener('ended', () => {
   } else { 
     setTimeout(() => {
       nextSong(true);
-    }, 150);
+    }, 300);
   }
 });
 
