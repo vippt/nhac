@@ -13,15 +13,15 @@
   <meta name="theme-color" content="#0f0f1e">
   <link rel="canonical" href="https://nhac.lephiphi.com/">
   <!-- Favicon chuẩn (ICO) cho các trình duyệt cũ -->
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-    
-    <!-- Favicon chính dạng PNG (Khuyên dùng kích thước 32x32 hoặc 16x16 px) -->
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    
-    <!-- Biểu tượng cho thiết bị Apple (iPhone/iPad - Kích thước 180x180 px) -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-<meta property="og:image" content="/logo.png">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  
+  <!-- Favicon chính dạng PNG (Khuyên dùng kích thước 32x32 hoặc 16x16 px) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  
+  <!-- Biểu tượng cho thiết bị Apple (iPhone/iPad - Kích thước 180x180 px) -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <meta property="og:image" content="/logo.png">
   <!-- Open Graph -->
   <meta property="og:type" content="music.playlist">
   <meta property="og:site_name" content="Nhac.LePhiPhi.Com">
@@ -553,9 +553,9 @@ let wakeLock = null;
 audio.volume = CONFIG.defaultVolume;
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
-// Wake Lock để giữ kết nối ngầm khi khóa màn hình
+// Wake Lock để giữ màn hình/tiến trình hoạt động
 async function requestWakeLock() {
-  if ('wakeLock' in navigator) {
+  if ('wakeLock' in navigator && document.visibilityState === 'visible') {
     try {
       wakeLock = await navigator.wakeLock.request('screen');
     } catch (err) {}
@@ -567,6 +567,12 @@ function releaseWakeLock() {
     wakeLock.release().then(() => { wakeLock = null; });
   }
 }
+
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
+    await requestWakeLock();
+  }
+});
 
 // RENDER PLAYLIST
 function renderPlaylist() {
@@ -662,7 +668,11 @@ function setPlayingState(playing) {
 
 function nextSong(auto = false) {
   if (playlist.length === 0) return;
-  if (repeatMode === 'one' && auto) { audio.currentTime = 0; playSong(); return; }
+  if (repeatMode === 'one' && auto) { 
+    audio.currentTime = 0; 
+    playSong(); 
+    return; 
+  }
   if (shuffleMode && playlist.length > 1) {
     history.push(currentIndex);
     let r, a = 0;
@@ -670,7 +680,11 @@ function nextSong(auto = false) {
     loadSong(r, true);
   } else {
     const next = (currentIndex + 1) % playlist.length;
-    if (next === 0 && repeatMode === 'none' && auto) { pauseSong(); loadSong(0, false); return; }
+    if (next === 0 && repeatMode === 'none' && auto) { 
+      pauseSong(); 
+      loadSong(0, false); 
+      return; 
+    }
     loadSong(next, true);
   }
 }
@@ -695,7 +709,7 @@ function formatTime(sec) {
   return `${Math.floor(sec / 60)}:${Math.floor(sec % 60).toString().padStart(2, '0')}`;
 }
 
-// MEDIA SESSION (TỐI ƯU CHẠY NGẦM KHI TẮT MÀN HÌNH)
+// MEDIA SESSION (BẮT BUỘC ĐỂ ĐIỀU KHIỂN & CHẠY KHÔNG BỊ TẮT KHI KHÓA MÀN HÌNH)
 function updateMediaSession() {
   if ('mediaSession' in navigator && playlist.length > 0) {
     const s = playlist[currentIndex];
@@ -719,12 +733,22 @@ function updateMediaSessionState() {
 }
 
 if ('mediaSession' in navigator) {
-  navigator.mediaSession.setActionHandler('play', playSong);
-  navigator.mediaSession.setActionHandler('pause', pauseSong);
-  navigator.mediaSession.setActionHandler('previoustrack', prevSong);
-  navigator.mediaSession.setActionHandler('nexttrack', () => nextSong(false));
-  navigator.mediaSession.setActionHandler('seekto', (d) => {
-    if (d.seekTime !== undefined) audio.currentTime = d.seekTime;
+  navigator.mediaSession.setActionHandler('play', () => {
+    playSong();
+  });
+  navigator.mediaSession.setActionHandler('pause', () => {
+    pauseSong();
+  });
+  navigator.mediaSession.setActionHandler('previoustrack', () => {
+    prevSong();
+  });
+  navigator.mediaSession.setActionHandler('nexttrack', () => {
+    nextSong(false);
+  });
+  navigator.mediaSession.setActionHandler('seekto', (details) => {
+    if (details.seekTime !== undefined && audio.duration) {
+      audio.currentTime = details.seekTime;
+    }
   });
 }
 
@@ -738,7 +762,6 @@ audio.addEventListener('timeupdate', () => {
     progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
     currentTimeEl.textContent = formatTime(audio.currentTime);
     
-    // Cập nhật vị trí phát cho hệ điều hành khi chạy ngầm
     if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
       try {
         navigator.mediaSession.setPositionState({
@@ -756,9 +779,14 @@ audio.addEventListener('loadedmetadata', () => {
   updateMediaSession();
 });
 
+// SỰ KIỆN KHI BÀI HÁT KẾT THÚC (ĐÃ FIX KHI TẮT MÀN HÌNH BẰNG MEDIA SESSION CALLBACK)
 audio.addEventListener('ended', () => {
-  if (repeatMode === 'one') { audio.currentTime = 0; playSong(); }
-  else nextSong(true);
+  if (repeatMode === 'one') { 
+    audio.currentTime = 0; 
+    playSong(); 
+  } else { 
+    nextSong(true); 
+  }
 });
 
 audio.addEventListener('play', () => setPlayingState(true));
