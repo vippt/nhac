@@ -459,7 +459,7 @@ const CONFIG = {
     { url: '/list/nghidenngaychungtasegia.mp3', title: 'Nghĩ Đến Ngày Chúng Ta Sẽ Già', artist: 'Unknow' },
   ],
   autoPlay: true,
-  defaultVolume: 1.0,
+  defaultVolume: 0.8,
 };
 
 // Set SEO Images & Favicon
@@ -709,7 +709,7 @@ function formatTime(sec) {
   return `${Math.floor(sec / 60)}:${Math.floor(sec % 60).toString().padStart(2, '0')}`;
 }
 
-// MEDIA SESSION (BẮT BUỘC ĐỂ ĐIỀU KHIỂN & CHẠY KHÔNG BỊ TẮT KHI KHÓA MÀN HÌNH)
+// MEDIA SESSION
 function updateMediaSession() {
   if ('mediaSession' in navigator && playlist.length > 0) {
     const s = playlist[currentIndex];
@@ -744,6 +744,7 @@ if ('mediaSession' in navigator) {
   });
   navigator.mediaSession.setActionHandler('nexttrack', () => {
     nextSong(false);
+    setTimeout(() => playSong(), 200);
   });
   navigator.mediaSession.setActionHandler('seekto', (details) => {
     if (details.seekTime !== undefined && audio.duration) {
@@ -779,13 +780,15 @@ audio.addEventListener('loadedmetadata', () => {
   updateMediaSession();
 });
 
-// SỰ KIỆN KHI BÀI HÁT KẾT THÚC (ĐÃ FIX KHI TẮT MÀN HÌNH BẰNG MEDIA SESSION CALLBACK)
+// SỰ KIỆN KHI BÀI HÁT KẾT THÚC (TỐI ƯU KHI TẮT MÀN HÌNH)
 audio.addEventListener('ended', () => {
   if (repeatMode === 'one') { 
     audio.currentTime = 0; 
     playSong(); 
   } else { 
-    nextSong(true); 
+    setTimeout(() => {
+      nextSong(true);
+    }, 150);
   }
 });
 
