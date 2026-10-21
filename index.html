@@ -488,7 +488,7 @@ const manifestData = {
 const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
 document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
 
-// Register SW - Đã tối ưu hóa tránh lỗi cache file MP3 khi chạy ngầm
+// Register SW - Tối ưu network cho tệp .mp3
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
   const swCode = `
     self.addEventListener('install', e => self.skipWaiting());
@@ -554,7 +554,7 @@ let wakeLock = null;
 audio.volume = CONFIG.defaultVolume;
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
-// Wake Lock để giữ tiến trình hoạt động
+// Wake Lock để giữ màn hình/tiến trình hoạt động
 async function requestWakeLock() {
   if ('wakeLock' in navigator && document.visibilityState === 'visible') {
     try {
@@ -573,9 +573,11 @@ document.addEventListener('visibilitychange', async () => {
   if (wakeLock !== null && document.visibilityState === 'visible') {
     await requestWakeLock();
   }
-  // Khi bật lại màn hình, nếu audio báo đang chạy nhưng đứt tiếng, trigger lại play nhẹ nhàng
-  if (document.visibilityState === 'visible' && isPlaying && audio.paused) {
-    audio.play().catch(() => {});
+  // Khi màn hình bật lại, nếu đang play mà bị treo tiếng thì khôi phục lại luồng audio
+  if (document.visibilityState === 'visible' && isPlaying) {
+    if (audio.paused || audio.networkState === 3) {
+      audio.play().catch(() => {});
+    }
   }
 });
 
@@ -614,7 +616,7 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// LOAD / PLAY / PAUSE - ĐÃ TỐI ƯU HÓA TẢI FILE KHI TẮT MÀN HÌNH
+// LOAD / PLAY / PAUSE - ĐÃ KHẮC PHỤC LỖI TREO BỘ ĐỆM SAU NHIỀU BÀI
 function loadSong(index, autoPlay = false) {
   if (index < 0 || index >= playlist.length) return;
   currentIndex = index;
@@ -625,19 +627,24 @@ function loadSong(index, autoPlay = false) {
   currentTimeEl.textContent = '0:00';
   totalTimeEl.textContent = '0:00';
   
-  // Reset audio hoàn toàn
+  // Ép giải phóng bộ đệm audio cũ hoàn toàn
   audio.pause();
-  audio.src = song.url;
+  audio.removeAttribute('src');
   audio.load();
   
-  updatePlaylistUI();
-  updateMediaSession();
-  
-  if (autoPlay) {
-    setTimeout(() => {
-      playSong();
-    }, 200);
-  }
+  // Gán nguồn mới sau một nhịp nhỏ để làm trống bộ đệm hệ điều hành
+  setTimeout(() => {
+    audio.src = song.url;
+    audio.load();
+    updatePlaylistUI();
+    updateMediaSession();
+    
+    if (autoPlay) {
+      setTimeout(() => {
+        playSong();
+      }, 250);
+    }
+  }, 100);
 }
 
 function playSong() {
@@ -747,18 +754,10 @@ function updateMediaSessionState() {
 }
 
 if ('mediaSession' in navigator) {
-  navigator.mediaSession.setActionHandler('play', () => {
-    playSong();
-  });
-  navigator.mediaSession.setActionHandler('pause', () => {
-    pauseSong();
-  });
-  navigator.mediaSession.setActionHandler('previoustrack', () => {
-    prevSong();
-  });
-  navigator.mediaSession.setActionHandler('nexttrack', () => {
-    nextSong(false);
-  });
+  navigator.mediaSession.setActionHandler('play', () => { playSong(); });
+  navigator.mediaSession.setActionHandler('pause', () => { pauseSong(); });
+  navigator.mediaSession.setActionHandler('previoustrack', () => { prevSong(); });
+  navigator.mediaSession.setActionHandler('nexttrack', () => { nextSong(false); });
   navigator.mediaSession.setActionHandler('seekto', (details) => {
     if (details.seekTime !== undefined && audio.duration) {
       audio.currentTime = details.seekTime;
@@ -793,7 +792,7 @@ audio.addEventListener('loadedmetadata', () => {
   updateMediaSession();
 });
 
-// SỰ KIỆN KHI BÀI HÁT KẾT THÚC (TỐI ƯU KHI TẮT MÀN HÌNH)
+// SỰ KIỆN KHI BÀI HÁT KẾT THÚC
 audio.addEventListener('ended', () => {
   if (repeatMode === 'one') { 
     audio.currentTime = 0; 
@@ -801,7 +800,15 @@ audio.addEventListener('ended', () => {
   } else { 
     setTimeout(() => {
       nextSong(true);
-    }, 300);
+    }, 400);
+  }
+});
+
+// TỰ ĐỘNG KHÔI PHỤC NẾU AUDIO BỊ TREO HOẶC MẤT LUỒNG MẠNG NGẦM
+audio.addEventListener('stalled', () => {
+  if (isPlaying) {
+    audio.load();
+    audio.play().catch(() => {});
   }
 });
 
