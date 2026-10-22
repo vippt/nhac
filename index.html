@@ -5,53 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
   <title>Nhac.LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao</title>
-  <meta name="description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay, cập nhật liên tục tại LePhiPhi.Com. Trải nghiệm nghe nhạc mượt mà trên mọi thiết bị.">
-  <meta name="keywords" content="nghe nhạc, nhạc online, playlist, nhạc miễn phí, LePhiPhi, music player, nghe nhạc online">
-  <meta name="author" content="Nhac.lePhiPhi.Com">
-  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta name="description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay, cập nhật liên tục tại LePhiPhi.Com.">
   <meta name="theme-color" content="#0f0f1e">
   <link rel="canonical" href="https://nhac.lephiphi.com/">
 
   <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <meta property="og:type" content="music.playlist">
-  <meta property="og:site_name" content="Nhac.LePhiPhi.Com">
-  <meta property="og:title" content="Nhac.LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao">
-  <meta property="og:description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay cập nhật liên tục.">
-  <meta property="og:url" content="https://nhac.lephiphi.com/">
+  <meta property="og:title" content="Nhac.LePhiPhi.Com - Nghe Nhạc Online">
   <meta property="og:image" content="/logo.png">
-  <meta property="og:image:width" content="512">
-  <meta property="og:image:height" content="512">
   <meta property="og:locale" content="vi_VN">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="LePhiPhi.Com - Nghe Nhạc Online">
-  <meta name="twitter:description" content="Playlist nhạc hay miễn phí, chất lượng cao.">
-  <meta name="twitter:image" content="/logo.png">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="LePhiPhi">
-  <meta name="application-name" content="LePhiPhi Music">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" id="manifest-link">
   <link rel="icon" id="favicon-link" type="image/png">
   <link rel="apple-touch-icon" id="apple-icon-link">
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "MusicPlaylist",
-    "name": "Nhac.LePhiPhi.Com Music",
-    "description": "Playlist nhạc hay trực tuyến miễn phí",
-    "url": "https://nhac.lephiphi.com/",
-    "image": "http://nhac.lephiphi.com/logo.png",
-    "inLanguage": "vi-VN"
-  }
-  </script>
 
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -115,7 +86,6 @@
     background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 30%,
       transparent 70%, rgba(102,126,234,0.1) 100%); pointer-events: none; z-index: 3;
   }
-
   .logo-inner {
     width: 100%; height: 100%; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -124,11 +94,7 @@
   .logo-inner.playing { animation: spinLogo 10s linear infinite; }
   .logo-inner.paused { animation-play-state: paused; }
   @keyframes spinLogo { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-
-  #logoImg {
-    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
-    display: block;
-  }
+  #logoImg { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
 
   .logo-waves {
     position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%);
@@ -267,10 +233,7 @@
   .playing-indicator span:nth-child(3) { height: 55%; animation-delay: 0.4s; }
   .playlist-item.paused .playing-indicator span { animation-play-state: paused; }
   @keyframes equalize { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
-  .empty-state {
-    text-align: center; padding: 30px 20px; color: var(--text-dim);
-    font-size: 13px; line-height: 1.6;
-  }
+  .empty-state { text-align: center; padding: 30px 20px; color: var(--text-dim); font-size: 13px; line-height: 1.6; }
 
   .install-btn {
     position: fixed;
@@ -285,32 +248,18 @@
     animation: pwaBounce 2s ease-in-out infinite;
   }
   .install-btn.show { display: flex; }
-  .install-btn:hover { transform: scale(1.08); box-shadow: 0 10px 36px rgba(102,126,234,0.75), 0 0 0 6px rgba(102,126,234,0.2); }
   .install-btn:active { transform: scale(0.95); }
   .install-btn svg { width: 26px; height: 26px; fill: #fff; }
-
-  @keyframes pwaBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-  }
+  @keyframes pwaBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
   .install-tooltip {
-    position: fixed;
-    bottom: calc(env(safe-area-inset-bottom) + 90px);
+    position: fixed; bottom: calc(env(safe-area-inset-bottom) + 90px);
     right: 20px; background: rgba(0,0,0,0.9); color: #fff;
     padding: 10px 14px; border-radius: 12px; font-size: 12px;
     max-width: 240px; line-height: 1.5; z-index: 499; display: none;
     box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
-    animation: fadeIn 0.3s;
   }
   .install-tooltip.show { display: block; }
-  .install-tooltip::after {
-    content: ''; position: absolute; bottom: -6px; right: 24px;
-    width: 12px; height: 12px; background: rgba(0,0,0,0.9);
-    transform: rotate(45deg); border-right: 1px solid rgba(255,255,255,0.1);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
 
   .unmute-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.75);
@@ -327,7 +276,6 @@
     animation: pulse 2s ease-in-out infinite;
   }
   .unmute-btn svg { width: 42px; height: 42px; fill: #fff; }
-  .unmute-btn:active { transform: scale(0.95); }
   @keyframes pulse {
     0%,100%{transform:scale(1);box-shadow:0 10px 40px rgba(102,126,234,0.6)}
     50%{transform:scale(1.05);box-shadow:0 10px 50px rgba(102,126,234,0.9)}
@@ -335,11 +283,7 @@
   .unmute-text { font-size: 15px; color: rgba(255,255,255,0.85); max-width: 280px; line-height: 1.5; }
   .unmute-brand { font-size: 13px; color: var(--accent); font-weight: 700; letter-spacing: 2px; margin-top: 8px; }
 
-  .sr-only {
-    position: absolute; width: 1px; height: 1px;
-    padding: 0; margin: -1px; overflow: hidden;
-    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
-  }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
   @media (max-height: 700px) {
     .logo-wrap { width: min(24vw, 85px); margin-bottom: 12px; }
@@ -349,12 +293,6 @@
     .controls { gap: 14px; margin-bottom: 10px; }
     .center-hole { width: 9px; height: 9px; }
     .logo-waves { height: 9px; }
-    .install-btn { width: 52px; height: 52px; }
-    .install-btn svg { width: 22px; height: 22px; }
-  }
-  @media (max-height: 600px) {
-    .logo-wrap { width: min(20vw, 65px); margin-bottom: 8px; }
-    .song-artist { margin-bottom: 10px; }
   }
 </style>
 </head>
@@ -367,7 +305,7 @@
     <div class="logo-wrap" id="logoWrap">
       <div class="logo-disc">
         <div class="logo-inner" id="logoInner">
-          <img id="logoImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="LePhiPhi.Com Logo">
+          <img id="logoImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="LePhiPhi Logo">
         </div>
         <div class="logo-waves">
           <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
@@ -416,14 +354,12 @@
   </div>
 </div>
 
-<audio id="audio" preload="auto" playsinline webkit-playsinline crossorigin="anonymous"></audio>
+<audio id="audio" preload="auto" playsinline webkit-playsinline></audio>
 
 <button class="install-btn" id="installBtn" aria-label="Cài đặt ứng dụng">
   <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
 </button>
-<div class="install-tooltip" id="installTooltip">
-  Nhấn để cài ứng dụng lên màn hình chính 📱
-</div>
+<div class="install-tooltip" id="installTooltip">Nhấn để cài ứng dụng 📱</div>
 
 <div class="unmute-overlay" id="unmuteOverlay">
   <button class="unmute-btn" id="unmuteBtn" aria-label="Phát nhạc">
@@ -449,56 +385,25 @@ const CONFIG = {
   defaultVolume: 0.8,
 };
 
-// Set SEO Images & Favicon
+// SEO images
 if (CONFIG.logoUrl && CONFIG.logoUrl.startsWith('http')) {
   document.getElementById('favicon-link').href = CONFIG.logoUrl;
   document.getElementById('apple-icon-link').href = CONFIG.logoUrl;
-  document.querySelector('meta[property="og:image"]').setAttribute('content', CONFIG.logoUrl);
-  document.querySelector('meta[name="twitter:image"]').setAttribute('content', CONFIG.logoUrl);
 }
 
 // Manifest
 const manifestData = {
-  name: 'LePhiPhi.Com Music',
-  short_name: 'LePhiPhi',
-  description: 'Nghe nhạc online miễn phí chất lượng cao',
-  start_url: location.origin + location.pathname,
-  scope: location.origin + '/',
-  display: 'standalone',
-  orientation: 'portrait',
-  background_color: '#0f0f1e',
-  theme_color: '#0f0f1e',
-  lang: 'vi',
+  name: 'LePhiPhi.Com Music', short_name: 'LePhiPhi',
+  start_url: location.origin + location.pathname, scope: location.origin + '/',
+  display: 'standalone', orientation: 'portrait',
+  background_color: '#0f0f1e', theme_color: '#0f0f1e', lang: 'vi',
   icons: [
     { src: CONFIG.logoUrl, sizes: '192x192', type: 'image/png', purpose: 'any' },
     { src: CONFIG.logoUrl, sizes: '512x512', type: 'image/png', purpose: 'any' },
     { src: CONFIG.logoUrl, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
   ]
 };
-const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
-document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
-
-// Register SW
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  const swCode = `
-    self.addEventListener('install', e => self.skipWaiting());
-    self.addEventListener('activate', e => self.clients.claim());
-    self.addEventListener('fetch', e => {
-      if (e.request.method !== 'GET') return;
-      if (e.request.url.endsWith('.mp3') || e.request.destination === 'audio') {
-        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-        return;
-      }
-      e.respondWith(
-        caches.match(e.request).then(cached => cached || fetch(e.request))
-      );
-    });
-  `;
-  const swBlob = new Blob([swCode], { type: 'application/javascript' });
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-    .then(() => console.log('✅ PWA Service Worker đã đăng ký'))
-    .catch(err => console.warn('SW không đăng ký được:', err));
-}
+document.getElementById('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(manifestData)], { type: 'application/json' }));
 
 // Playlist
 const playlist = CONFIG.songs.map((s, i) => ({
@@ -533,6 +438,7 @@ const installTooltip = document.getElementById('installTooltip');
 
 if (CONFIG.logoUrl) logoImg.src = CONFIG.logoUrl;
 
+// ============ STATE ============
 let currentIndex = 0;
 let isPlaying = false;
 let isSeeking = false;
@@ -541,41 +447,40 @@ let repeatMode = 'none';
 let history = [];
 let wakeLock = null;
 let hasTriggeredEnd = false;
+let retryCount = 0;
+const MAX_RETRIES = 2;
 
-// Preloader cho bài kế
-let preloader = null;
-let preloaderUrl = '';
+// Blob cache — thay cho preloader Audio() (nguyên nhân lỗi)
+const blobCache = new Map();
+const MAX_CACHE = 2;
+let prefetchCtrl = null;
+let lastPrefetchedUrl = '';
+
+// Heartbeat backup
+let heartbeatTimer = null;
+const HEARTBEAT_MS = 3000;
 
 audio.volume = CONFIG.defaultVolume;
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
-// Wake Lock
+// ============ WAKE LOCK ============
 async function requestWakeLock() {
   if ('wakeLock' in navigator && document.visibilityState === 'visible') {
-    try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
   }
 }
 function releaseWakeLock() {
-  if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }); }
+  if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }).catch(() => {}); }
 }
 
-document.addEventListener('visibilitychange', async () => {
-  if (wakeLock !== null && document.visibilityState === 'visible') {
-    await requestWakeLock();
-  }
-  // Không ép play lại khi tab quay về visible — để Media Session tự xử lý
-});
-
-// RENDER PLAYLIST
+// ============ RENDER PLAYLIST ============
 function renderPlaylist() {
   playlistCount.textContent = playlist.length;
   playlistList.innerHTML = '';
-
   if (playlist.length === 0) {
-    playlistList.innerHTML = `<div class="empty-state">Chưa có bài hát nào.<br>Dán link MP3 vào mảng <b>songs</b> trong CONFIG.</div>`;
+    playlistList.innerHTML = `<div class="empty-state">Chưa có bài hát nào.</div>`;
     return;
   }
-
   playlist.forEach((song, index) => {
     const item = document.createElement('div');
     item.className = 'playlist-item' + (index === currentIndex ? ' active' : '');
@@ -594,48 +499,58 @@ function renderPlaylist() {
     playlistList.appendChild(item);
   });
 }
-
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 }
 
-// PRELOAD bài kế
-function preloadNext() {
+// ============ PREFETCH (fetch + blob, KHÔNG tạo Audio) ============
+function prefetchNext() {
   if (playlist.length < 2) return;
-  let nextIdx;
-  if (shuffleMode) return; // shuffle không preload
-  if (repeatMode === 'one') nextIdx = currentIndex;
-  else nextIdx = (currentIndex + 1) % playlist.length;
-
+  if (shuffleMode || repeatMode === 'one') return;
+  const nextIdx = (currentIndex + 1) % playlist.length;
   const url = playlist[nextIdx].url;
-  if (preloaderUrl === url) return;
+  if (blobCache.has(url)) return;
+  if (lastPrefetchedUrl === url) return;
+  lastPrefetchedUrl = url;
 
-  try {
-    preloader = new Audio();
-    preloader.preload = 'auto';
-    preloader.src = url;
-    preloaderUrl = url;
-  } catch (e) {}
+  if (prefetchCtrl) { try { prefetchCtrl.abort(); } catch (e) {} }
+  prefetchCtrl = new AbortController();
+
+  fetch(url, { signal: prefetchCtrl.signal })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.blob(); })
+    .then(blob => {
+      const blobUrl = URL.createObjectURL(blob);
+      blobCache.set(url, blobUrl);
+      // LRU prune
+      while (blobCache.size > MAX_CACHE) {
+        const [k] = blobCache.keys();
+        try { URL.revokeObjectURL(blobCache.get(k)); } catch (e) {}
+        blobCache.delete(k);
+      }
+    })
+    .catch(e => { if (e.name !== 'AbortError') console.warn('Prefetch failed:', e.message); });
 }
 
-// LOAD / PLAY / PAUSE — SYNC HOÀN TOÀN, KHÔNG setTimeout
+// ============ LOAD / PLAY / PAUSE ============
 function loadSong(index, autoPlay = false) {
   if (index < 0 || index >= playlist.length) return;
   currentIndex = index;
-  hasTriggeredEnd = false;
-
+  lastPrefetchedUrl = '';
   const song = playlist[index];
+
   songTitle.textContent = song.title;
   songArtist.textContent = song.artist || 'Không rõ';
   progressFill.style.width = '0%';
   currentTimeEl.textContent = '0:00';
   totalTimeEl.textContent = '0:00';
 
-  // Gán src + load + (play) đồng bộ
-  audio.src = song.url;
-  audio.load();
+  // Dùng blob URL nếu có (transition tức thì, không cần mạng)
+  const playUrl = blobCache.get(song.url) || song.url;
+  audio.src = playUrl;
+  // KHÔNG gọi audio.load() — src mới tự trigger load
+  // KHÔNG reset hasTriggeredEnd tại đây — chỉ reset khi `playing` event
 
   updatePlaylistUI();
   updateMediaSession();
@@ -645,19 +560,39 @@ function loadSong(index, autoPlay = false) {
 
 function playSong() {
   if (playlist.length === 0) return;
-  hasTriggeredEnd = false;
   const p = audio.play();
-  if (p !== undefined) {
-    p.then(() => {
-      setPlayingState(true);
-      hideUnmuteOverlay();
-      requestWakeLock();
-    }).catch(err => {
-      setPlayingState(false);
-      if (err.name === 'NotAllowedError') showUnmuteOverlay();
-      else { songTitle.textContent = '⚠️ Lỗi phát'; songArtist.textContent = 'Kiểm tra link MP3'; }
-    });
-  }
+  if (p === undefined) return;
+
+  p.then(() => {
+    // Thành công — hasTriggeredEnd sẽ được reset trong `playing` event
+    hideUnmuteOverlay();
+    requestWakeLock();
+  }).catch(err => {
+    // Cho phép retry
+    hasTriggeredEnd = false;
+    setPlayingState(false);
+
+    if (err.name === 'NotAllowedError') {
+      showUnmuteOverlay();
+      return;
+    }
+
+    console.warn('play() failed:', err.name, err.message);
+
+    if (retryCount < MAX_RETRIES) {
+      retryCount++;
+      setTimeout(() => {
+        if (!audio.paused) return;
+        const song = playlist[currentIndex];
+        audio.src = blobCache.get(song.url) || song.url;
+        playSong();
+      }, 500);
+    } else {
+      retryCount = 0;
+      songTitle.textContent = '⚠️ Lỗi phát';
+      songArtist.textContent = 'Nhấn để thử lại';
+    }
+  });
 }
 
 function pauseSong() {
@@ -675,9 +610,11 @@ function setPlayingState(playing) {
     logoInner.classList.add('playing');
     logoInner.classList.remove('paused');
     logoWrap.classList.add('playing');
+    startHeartbeat();
   } else {
     logoInner.classList.add('paused');
     logoWrap.classList.remove('playing');
+    stopHeartbeat();
   }
   updatePlaylistUI();
   updateMediaSessionState();
@@ -700,8 +637,10 @@ function nextSong(auto = false) {
   } else {
     const next = (currentIndex + 1) % playlist.length;
     if (next === 0 && repeatMode === 'none' && auto) {
+      // Hết playlist — dừng ở bài 0, user tự bấm play
       pauseSong();
       loadSong(0, false);
+      hasTriggeredEnd = false;
       return;
     }
     loadSong(next, true);
@@ -716,8 +655,7 @@ function prevSong() {
 }
 
 function updatePlaylistUI() {
-  const items = playlistList.querySelectorAll('.playlist-item');
-  items.forEach((item, i) => {
+  playlistList.querySelectorAll('.playlist-item').forEach((item, i) => {
     item.classList.toggle('active', i === currentIndex);
     item.classList.toggle('paused', !isPlaying);
   });
@@ -728,7 +666,34 @@ function formatTime(sec) {
   return `${Math.floor(sec / 60)}:${Math.floor(sec % 60).toString().padStart(2, '0')}`;
 }
 
-// MEDIA SESSION
+// ============ HEARTBEAT ============
+function startHeartbeat() {
+  if (heartbeatTimer) return;
+  heartbeatTimer = setInterval(() => {
+    if (!isPlaying) return;
+    if (hasTriggeredEnd) return;
+
+    // Nếu đáng lẽ đang phát mà audio bị paused (OS interruption)
+    if (audio.paused && !audio.ended && audio.readyState >= 2) {
+      const p = audio.play();
+      if (p) p.catch(err => {
+        if (err.name === 'NotAllowedError') showUnmuteOverlay();
+      });
+    }
+    // Fallback near-end (phòng khi `ended`/timeupdate bị throttle khi tắt màn hình)
+    if (audio.duration > 0 && isFinite(audio.duration) &&
+        repeatMode !== 'one' &&
+        audio.currentTime > 2 &&
+        audio.duration - audio.currentTime < 1) {
+      nextSong(true);
+    }
+  }, HEARTBEAT_MS);
+}
+function stopHeartbeat() {
+  if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
+}
+
+// ============ MEDIA SESSION ============
 function updateMediaSession() {
   if ('mediaSession' in navigator && playlist.length > 0) {
     const s = playlist[currentIndex];
@@ -744,54 +709,48 @@ function updateMediaSession() {
     updateMediaSessionState();
   }
 }
-
 function updateMediaSessionState() {
   if ('mediaSession' in navigator) {
     navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
   }
 }
-
 if ('mediaSession' in navigator) {
-  navigator.mediaSession.setActionHandler('play', () => { playSong(); });
-  navigator.mediaSession.setActionHandler('pause', () => { pauseSong(); });
-  navigator.mediaSession.setActionHandler('previoustrack', () => { prevSong(); });
-  navigator.mediaSession.setActionHandler('nexttrack', () => { nextSong(false); });
-  navigator.mediaSession.setActionHandler('seekto', (details) => {
-    if (details.seekTime !== undefined && audio.duration) {
-      audio.currentTime = details.seekTime;
-    }
+  navigator.mediaSession.setActionHandler('play', () => playSong());
+  navigator.mediaSession.setActionHandler('pause', () => pauseSong());
+  navigator.mediaSession.setActionHandler('previoustrack', () => prevSong());
+  navigator.mediaSession.setActionHandler('nexttrack', () => nextSong(false));
+  navigator.mediaSession.setActionHandler('seekto', (d) => {
+    if (d.seekTime !== undefined && audio.duration) audio.currentTime = d.seekTime;
   });
 }
 
-// EVENTS
+// ============ EVENTS ============
 playBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', () => nextSong(false));
 prevBtn.addEventListener('click', prevSong);
 
 audio.addEventListener('timeupdate', () => {
-  if (!isSeeking && audio.duration && isFinite(audio.duration)) {
-    progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-    currentTimeEl.textContent = formatTime(audio.currentTime);
+  if (isSeeking) return;
+  if (!audio.duration || !isFinite(audio.duration)) return;
 
-    // Preload bài kế khi còn ~15s
-    if (audio.duration - audio.currentTime < 15) {
-      preloadNext();
-    }
+  progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
 
-    // Fallback chuyển bài khi sát cuối
-    if (!hasTriggeredEnd && audio.currentTime > 2 && audio.duration - audio.currentTime < 0.3) {
-      nextSong(true);
-    }
+  // Fallback near-end (0.8s window)
+  if (!hasTriggeredEnd && repeatMode !== 'one' &&
+      audio.currentTime > 2 &&
+      audio.duration - audio.currentTime < 0.8) {
+    nextSong(true);
+  }
 
-    if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
-      try {
-        navigator.mediaSession.setPositionState({
-          duration: audio.duration,
-          playbackRate: audio.playbackRate,
-          position: audio.currentTime
-        });
-      } catch (e) {}
-    }
+  if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+    try {
+      navigator.mediaSession.setPositionState({
+        duration: audio.duration,
+        playbackRate: audio.playbackRate,
+        position: audio.currentTime
+      });
+    } catch (e) {}
   }
 });
 
@@ -800,7 +759,23 @@ audio.addEventListener('loadedmetadata', () => {
   updateMediaSession();
 });
 
-// ENDED — GỌI ĐỒNG BỘ, KHÔNG setTimeout
+// `playing` = playback thực sự bắt đầu — reset guard + retry
+audio.addEventListener('playing', () => {
+  hasTriggeredEnd = false;
+  retryCount = 0;
+  setPlayingState(true);
+  prefetchNext();
+});
+
+// `pause` — chỉ coi là user pause nếu KHÔNG trong transition
+audio.addEventListener('pause', () => {
+  if (hasTriggeredEnd) return;   // đang chuyển bài, bỏ qua
+  if (!isPlaying) return;         // đã ở trạng thái pause rồi
+  setPlayingState(false);
+  releaseWakeLock();
+});
+
+// `ended` — gọi ĐỒNG BỘ, không setTimeout
 audio.addEventListener('ended', () => {
   if (hasTriggeredEnd) return;
   if (repeatMode === 'one') {
@@ -811,31 +786,42 @@ audio.addEventListener('ended', () => {
   }
 });
 
-// STALLED — KHÔNG reload bài, chỉ retry play()
-audio.addEventListener('stalled', () => {
-  if (isPlaying && audio.paused) {
-    const p = audio.play();
-    if (p) p.catch(() => {});
-  }
-});
-
-audio.addEventListener('play', () => setPlayingState(true));
-audio.addEventListener('pause', () => {
-  // Chỉ cập nhật UI khi thực sự pause (không phải chuyển bài)
-  if (!hasTriggeredEnd) setPlayingState(false);
-});
 audio.addEventListener('error', () => {
+  hasTriggeredEnd = false;
+  retryCount = 0;
+  console.warn('Audio error:', audio.error);
+  const song = playlist[currentIndex];
+  const cached = blobCache.get(song.url);
+  if (cached && audio.src !== cached) {
+    audio.src = cached;
+    playSong();
+    return;
+  }
   songTitle.textContent = '⚠️ Lỗi tải file';
-  songArtist.textContent = 'Kiểm tra link MP3';
+  songArtist.textContent = 'Kiểm tra kết nối mạng';
   setPlayingState(false);
 });
-audio.addEventListener('waiting', () => songArtist.textContent = '⏳ Đang tải...');
+
+audio.addEventListener('waiting', () => { songArtist.textContent = '⏳ Đang tải...'; });
 audio.addEventListener('canplay', () => {
   const s = playlist[currentIndex];
   if (s) songArtist.textContent = s.artist || 'Không rõ';
 });
 
-// SEEK
+// Khi quay lại visible — đồng bộ UI với trạng thái audio thực tế
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
+    await requestWakeLock();
+  }
+  if (document.visibilityState === 'visible') {
+    const actuallyPlaying = !audio.paused && !audio.ended;
+    if (isPlaying !== actuallyPlaying) {
+      setPlayingState(actuallyPlaying);
+    }
+  }
+});
+
+// ============ SEEK ============
 function seekFromEvent(e) {
   const rect = progressBar.getBoundingClientRect();
   const x = e.touches ? e.touches[0].clientX : e.clientX;
@@ -853,7 +839,7 @@ progressBar.addEventListener('touchstart', (e) => { isSeeking = true; progressBa
 progressBar.addEventListener('touchmove', (e) => { if (isSeeking) seekFromEvent(e); }, { passive: true });
 progressBar.addEventListener('touchend', () => { isSeeking = false; progressBar.classList.remove('dragging'); });
 
-// SHUFFLE / REPEAT
+// ============ SHUFFLE / REPEAT ============
 shuffleBtn.addEventListener('click', () => {
   shuffleMode = !shuffleMode;
   shuffleBtn.classList.toggle('active', shuffleMode);
@@ -868,12 +854,12 @@ repeatBtn.addEventListener('click', () => {
     : '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>';
 });
 
-// OVERLAY AUTOPLAY
+// ============ OVERLAY ============
 function showUnmuteOverlay() { unmuteOverlay.classList.add('show'); }
 function hideUnmuteOverlay() { unmuteOverlay.classList.remove('show'); }
 unmuteBtn.addEventListener('click', () => { hideUnmuteOverlay(); playSong(); });
 
-// KEYBOARD
+// ============ KEYBOARD ============
 document.addEventListener('keydown', (e) => {
   if (e.target.matches('input, textarea')) return;
   if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
@@ -881,33 +867,25 @@ document.addEventListener('keydown', (e) => {
   if (e.code === 'ArrowLeft') { e.preventDefault(); prevSong(); }
 });
 
-// PWA INSTALL
+// ============ PWA INSTALL ============
 let deferredPrompt = null;
 let installBtnShown = false;
-
 function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches
-      || window.navigator.standalone === true;
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 }
-
 function showInstallBtn() {
   if (installBtnShown || isStandalone()) return;
   installBtnShown = true;
   installBtn.classList.add('show');
 }
-
 window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  showInstallBtn();
+  e.preventDefault(); deferredPrompt = e; showInstallBtn();
 });
-
 window.addEventListener('appinstalled', () => {
   installBtn.classList.remove('show');
   installTooltip.classList.remove('show');
   deferredPrompt = null;
 });
-
 setTimeout(() => {
   if (!deferredPrompt && !isStandalone()) {
     showInstallBtn();
@@ -915,34 +893,27 @@ setTimeout(() => {
     setTimeout(() => installTooltip.classList.remove('show'), 6000);
   }
 }, 4000);
-
 installBtn.addEventListener('click', async () => {
   installTooltip.classList.remove('show');
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      installBtn.classList.remove('show');
-    }
+    if (outcome === 'accepted') installBtn.classList.remove('show');
     deferredPrompt = null;
   } else {
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    const msg = isIOS
-      ? '📱 Để cài đặt trên iPhone/iPad:\n\n1. Nhấn vào biểu tượng Chia sẻ (⬆️) trên Safari\n2. Chọn "Thêm vào màn hình chính"\n3. Nhấn "Thêm"'
-      : '📱 Để cài đặt:\n\n1. Mở menu trình duyệt (⋮)\n2. Chọn "Thêm vào màn hình chính" hoặc "Cài đặt ứng dụng"\n3. Nhấn "Cài đặt"';
-    alert(msg);
+    alert(isIOS
+      ? '📱 Trên iPhone/iPad:\n1. Nhấn biểu tượng Chia sẻ (⬆️) trên Safari\n2. Chọn "Thêm vào màn hình chính"\n3. Nhấn "Thêm"'
+      : '📱 Trên Android:\n1. Mở menu trình duyệt (⋮)\n2. Chọn "Cài đặt ứng dụng" hoặc "Thêm vào màn hình chính"');
   }
 });
 
-// INIT
+// ============ INIT ============
 function init() {
   renderPlaylist();
   if (playlist.length > 0) {
     loadSong(0, false);
-    if (CONFIG.autoPlay) {
-      // Thử play ngay; nếu bị chặn sẽ hiện overlay
-      playSong();
-    }
+    if (CONFIG.autoPlay) playSong();
   }
 }
 init();
