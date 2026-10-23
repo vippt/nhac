@@ -410,13 +410,13 @@
 
   <div class="playlist-wrap">
     <div class="playlist-header">
-      Danh sách phát · <span id="playlistCount">0</span> bài · <span class="brand">LePhiPhi.Com</span>
+      Danh sách phát · <span id="playlistCount">0</span> · <span class="brand">LePhiPhi.Com</span>
     </div>
     <div class="playlist" id="playlistList"></div>
   </div>
 </div>
 
-<audio id="audio" preload="auto" playsinline webkit-playsinline crossorigin="anonymous"></audio>
+<audio id="audio" preload="metadata" playsinline webkit-playsinline crossorigin="anonymous"></audio>
 
 <button class="install-btn" id="installBtn" aria-label="Cài đặt ứng dụng">
   <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
@@ -448,6 +448,13 @@ const CONFIG = {
   autoPlay: true,
   defaultVolume: 0.8,
 };
+
+// ===== NHẬN DIỆN MÔI TRƯỜNG =====
+// PC/Desktop: tắt blob cache + prefetch + prime => phát stream trực tiếp, nhẹ nhất.
+// Mobile: giữ blob + prime để phát nền khi tắt màn hình.
+const IS_MOBILE     = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+const USE_BLOB_CACHE = IS_MOBILE;
+const USE_PRIME_IDLE = IS_MOBILE;
 
 // Set SEO Images & Favicon
 if (CONFIG.logoUrl && CONFIG.logoUrl.startsWith('http')) {
@@ -488,12 +495,12 @@ const playlist = CONFIG.songs.map((s, i) => ({
 // DOM
 const audioA = document.getElementById('audio');
 const audioB = new Audio();
-audioB.preload = 'auto';
+audioB.preload = 'metadata';
 audioB.crossOrigin = 'anonymous';
 audioB.setAttribute('playsinline', '');
 audioB.style.display = 'none';
 document.body.appendChild(audioB);
-let audio = audioA; // thẻ đang phát; thẻ còn lại nạp sẵn bài kế
+let audio = audioA;
 const playBtn = document.getElementById('playBtn');
 const playIcon = document.getElementById('playIcon');
 const prevBtn = document.getElementById('prevBtn');
@@ -527,14 +534,13 @@ let history = [];
 let wakeLock = null;
 let hasTriggeredEnd = false;
 
-// Preload blob: phát từ bộ nhớ, không cần mạng khi tắt màn hình
+// Blob cache — CHỈ mobile dùng
 const blobCache = new Map();
 let nextShuffleIdx = null;
 
 audioA.volume = CONFIG.defaultVolume;
 audioB.volume = CONFIG.defaultVolume;
 
-// Gắn sự kiện cho cả 2 thẻ, chỉ xử lý sự kiện của thẻ đang phát
 function bindAudio(type, fn) {
   [audioA, audioB].forEach(el => el.addEventListener(type, (e) => {
     if (el !== audio) return;
@@ -542,7 +548,7 @@ function bindAudio(type, fn) {
   }));
 }
 
-// Mồi thẻ thứ 2 trong lần bấm đầu tiên (iOS/Android cho phép play() sau này khi khóa màn hình)
+// ===== PRIME IDLE — chỉ mobile =====
 let primed = false, priming = false;
 function makeSilentWav() {
   const n = 800, b = new Uint8Array(44 + n), dv = new DataView(b.buffer);
@@ -554,6 +560,7 @@ function makeSilentWav() {
   return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
 }
 function primeIdle() {
+  if (!USE_PRIME_IDLE) return;
   if (primed || priming) return;
   const idle = audio === audioA ? audioB : audioA;
   priming = true;
@@ -571,8 +578,9 @@ function primeIdle() {
   if (p) p.then(() => done(true)).catch(() => done(false)); else done(true);
 }
 
-// Nạp sẵn bài kế vào thẻ đang rảnh
+// Nạp sẵn bài kế vào thẻ rảnh — chỉ mobile (vì phụ thuộc blob)
 function prepareIdle() {
+  if (!USE_BLOB_CACHE) return;
   if (priming || playlist.length < 2) return;
   const idle = audio === audioA ? audioB : audioA;
   let nextIdx;
@@ -594,10 +602,12 @@ function prepareIdle() {
   idle.dataset.idx = String(nextIdx);
   idle.dataset.ready = '1';
 }
+
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
-// Wake Lock
+// Wake Lock — chỉ mobile mới có tác dụng, PC không cần
 async function requestWakeLock() {
+  if (!IS_MOBILE) return;
   if ('wakeLock' in navigator && document.visibilityState === 'visible') {
     try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
   }
@@ -605,17 +615,15 @@ async function requestWakeLock() {
 function releaseWakeLock() {
   if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }); }
 }
-
 document.addEventListener('visibilitychange', async () => {
   if (wakeLock !== null && document.visibilityState === 'visible') {
     await requestWakeLock();
   }
-  // Không ép play lại khi tab quay về visible — để Media Session tự xử lý
 });
 
 // RENDER PLAYLIST
 function renderPlaylist() {
-  playlistCount.textContent = playlist.length;
+  playlistCount.textContent = playlist.length + ' bài';
   playlistList.innerHTML = '';
 
   if (playlist.length === 0) {
@@ -648,37 +656,87 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// PRELOAD TOÀN BỘ playlist dạng blob (tuần tự, bắt đầu từ bài đang phát)
+// ===== PREFETCH CÓ GIỚI HẠN — chỉ mobile =====
+const PREFETCH_AHEAD   = 1;
+const MAX_CACHED_BLOBS = 3;
+const PREFETCH_DELAY   = 6000;
+
+let prefetchTimer = null;
+let prefetchCtrl  = null;
+let prefetchToken = 0;
+
 function updateCacheUI() {
-  const n = [...blobCache.values()].filter(Boolean).length;
-  playlistCount.textContent = playlist.length + (n >= playlist.length ? ' ✓ đã tải hết' : ' (đã tải ' + n + '/' + playlist.length + ')');
+  if (!USE_BLOB_CACHE) { playlistCount.textContent = playlist.length + ' bài'; return; }
+  const n = blobCache.size;
+  playlistCount.textContent = n
+    ? playlist.length + ' bài · đã nạp ' + n
+    : playlist.length + ' bài';
 }
 
-async function prefetch(idx) {
+function cancelPrefetch() {
+  prefetchToken++;
+  if (prefetchTimer) { clearTimeout(prefetchTimer); prefetchTimer = null; }
+  if (prefetchCtrl) { try { prefetchCtrl.abort(); } catch (e) {} prefetchCtrl = null; }
+}
+
+function trimCache() {
+  if (blobCache.size <= MAX_CACHED_BLOBS) return;
+  const keep = new Set();
+  if (audio.src.startsWith('blob:')) keep.add(audio.src);
+  const idleEl = audio === audioA ? audioB : audioA;
+  if (idleEl.src.startsWith('blob:')) keep.add(idleEl.src);
+  for (const [url, blobUrl] of [...blobCache]) {
+    if (blobCache.size <= MAX_CACHED_BLOBS) break;
+    if (keep.has(blobUrl)) continue;
+    URL.revokeObjectURL(blobUrl);
+    blobCache.delete(url);
+  }
+}
+
+function nextPrefetchIndex() {
+  if (shuffleMode) return nextShuffleIdx !== null ? nextShuffleIdx : -1;
+  return (currentIndex + PREFETCH_AHEAD) % playlist.length;
+}
+
+async function prefetchOne(idx) {
+  if (!USE_BLOB_CACHE) return;
+  if (idx < 0 || idx >= playlist.length) return;
   const url = playlist[idx].url;
-  if (blobCache.get(url)) return;
+  if (blobCache.has(url)) return;
+
+  const token = prefetchToken;
+  prefetchCtrl = new AbortController();
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, { signal: prefetchCtrl.signal });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const blob = await res.blob();
-    blobCache.set(url, URL.createObjectURL(blob));
-  } catch (e) {}
-  updateCacheUI();
-  prepareIdle();
-}
-
-let prefetching = false;
-async function prefetchAhead() {
-  if (prefetching) return;
-  prefetching = true;
-  try {
-    for (let k = 0; k < playlist.length; k++) {
-      await prefetch((currentIndex + k) % playlist.length);
+    if (token !== prefetchToken) return;
+    if (!blobCache.has(url)) blobCache.set(url, URL.createObjectURL(blob));
+    trimCache();
+  } catch (e) {
+    // aborted / lỗi mạng -> bỏ qua, bài vẫn phát trực tiếp từ URL
+  } finally {
+    if (token === prefetchToken) {
+      prefetchCtrl = null;
+      updateCacheUI();
+      prepareIdle();
     }
-  } finally { prefetching = false; }
+  }
 }
 
-// Watchdog: nếu bài kẹt "đang tải" quá lâu thì thử lại 1 lần rồi nhảy bài
+function schedulePrefetch(delay = PREFETCH_DELAY) {
+  if (!USE_BLOB_CACHE) return;    // PC: không làm gì cả
+  cancelPrefetch();
+  const token = prefetchToken;
+  prefetchTimer = setTimeout(async () => {
+    prefetchTimer = null;
+    if (token !== prefetchToken) return;
+    if (!isPlaying) return;
+    await prefetchOne(nextPrefetchIndex());
+  }, delay);
+}
+
+// Watchdog
 let stuckTimer = null;
 function armWatchdog() {
   clearTimeout(stuckTimer);
@@ -695,7 +753,7 @@ function armWatchdog() {
   }, 12000);
 }
 
-// LOAD / PLAY / PAUSE — SYNC HOÀN TOÀN, KHÔNG setTimeout
+// ===== LOAD / PLAY / PAUSE =====
 function loadSong(index, autoPlay = false) {
   if (index < 0 || index >= playlist.length) return;
   currentIndex = index;
@@ -708,21 +766,26 @@ function loadSong(index, autoPlay = false) {
   currentTimeEl.textContent = '0:00';
   totalTimeEl.textContent = '0:00';
 
-  // Gán src + load + (play) đồng bộ
-  const idleEl = audio === audioA ? audioB : audioA;
-  const cached = blobCache.get(song.url);
-  if (autoPlay && cached && idleEl.dataset.ready === '1' && idleEl.dataset.idx === String(index)) {
-    // Chuyển sang thẻ đã nạp sẵn: không đổi src trên thẻ đang phát
-    const old = audio;
-    audio = idleEl;
-    audio.volume = old.volume;
-    audio.currentTime = 0;
-    try { old.pause(); } catch (e) {}
-    if (isFinite(audio.duration)) totalTimeEl.textContent = formatTime(audio.duration);
+  // Chỉ mobile mới dùng cơ chế "swap thẻ đã nạp sẵn"
+  if (USE_BLOB_CACHE) {
+    const idleEl = audio === audioA ? audioB : audioA;
+    const cached = blobCache.get(song.url);
+    if (autoPlay && cached && idleEl.dataset.ready === '1' && idleEl.dataset.idx === String(index)) {
+      const old = audio;
+      audio = idleEl;
+      audio.volume = old.volume;
+      audio.currentTime = 0;
+      try { old.pause(); } catch (e) {}
+      if (isFinite(audio.duration)) totalTimeEl.textContent = formatTime(audio.duration);
+    } else {
+      audio.src = cached || song.url;
+      audio.dataset.idx = String(index);
+      audio.dataset.ready = '1';
+      audio.load();
+    }
   } else {
-    audio.src = cached || song.url;
-    audio.dataset.idx = String(index);
-    audio.dataset.ready = '1';
+    // PC: luôn phát trực tiếp từ URL, không blob
+    audio.src = song.url;
     audio.load();
   }
 
@@ -730,14 +793,14 @@ function loadSong(index, autoPlay = false) {
   updateMediaSession();
 
   if (autoPlay) playSong();
-  prefetchAhead();
+  schedulePrefetch();
   prepareIdle();
   armWatchdog();
 }
 
 function playSong() {
   if (playlist.length === 0) return;
-  primeIdle();
+  if (USE_PRIME_IDLE) primeIdle();
   hasTriggeredEnd = false;
   const p = audio.play();
   if (p !== undefined) {
@@ -745,6 +808,7 @@ function playSong() {
       setPlayingState(true);
       hideUnmuteOverlay();
       requestWakeLock();
+      schedulePrefetch();
     }).catch(err => {
       setPlayingState(false);
       if (err.name === 'NotAllowedError') showUnmuteOverlay();
@@ -869,7 +933,6 @@ bindAudio('timeupdate', () => {
     progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
     currentTimeEl.textContent = formatTime(audio.currentTime);
 
-    // Fallback chuyển bài khi sát cuối
     if (!hasTriggeredEnd && audio.currentTime > 2 && audio.duration - audio.currentTime < 0.3) {
       nextSong(true);
     }
@@ -891,7 +954,6 @@ bindAudio('loadedmetadata', () => {
   updateMediaSession();
 });
 
-// ENDED — GỌI ĐỒNG BỘ, KHÔNG setTimeout
 bindAudio('ended', () => {
   if (hasTriggeredEnd) return;
   if (repeatMode === 'one') {
@@ -902,7 +964,6 @@ bindAudio('ended', () => {
   }
 });
 
-// STALLED — KHÔNG reload bài, chỉ retry play()
 bindAudio('stalled', () => {
   if (isPlaying && audio.paused) {
     const p = audio.play();
@@ -912,7 +973,6 @@ bindAudio('stalled', () => {
 
 bindAudio('play', () => setPlayingState(true));
 bindAudio('pause', () => {
-  // Chỉ cập nhật UI khi thực sự pause (không phải chuyển bài)
   if (audio.ended || hasTriggeredEnd) return;
   setPlayingState(false);
 });
@@ -951,7 +1011,7 @@ shuffleBtn.addEventListener('click', () => {
   shuffleBtn.classList.toggle('active', shuffleMode);
   history = [];
   nextShuffleIdx = null;
-  prefetchAhead();
+  schedulePrefetch();
   prepareIdle();
 });
 repeatBtn.addEventListener('click', () => {
@@ -1032,10 +1092,10 @@ installBtn.addEventListener('click', async () => {
 // INIT
 function init() {
   renderPlaylist();
+  updateCacheUI();
   if (playlist.length > 0) {
     loadSong(0, false);
     if (CONFIG.autoPlay) {
-      // Thử play ngay; nếu bị chặn sẽ hiện overlay
       playSong();
     }
   }
