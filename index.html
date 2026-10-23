@@ -478,28 +478,6 @@ const manifestData = {
 const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
 document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
 
-// Register SW
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
-  const swCode = `
-    self.addEventListener('install', e => self.skipWaiting());
-    self.addEventListener('activate', e => self.clients.claim());
-    self.addEventListener('fetch', e => {
-      if (e.request.method !== 'GET') return;
-      if (e.request.url.endsWith('.mp3') || e.request.destination === 'audio') {
-        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
-        return;
-      }
-      e.respondWith(
-        caches.match(e.request).then(cached => cached || fetch(e.request))
-      );
-    });
-  `;
-  const swBlob = new Blob([swCode], { type: 'application/javascript' });
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob))
-    .then(() => console.log('✅ PWA Service Worker đã đăng ký'))
-    .catch(err => console.warn('SW không đăng ký được:', err));
-}
-
 // Playlist
 const playlist = CONFIG.songs.map((s, i) => ({
   url: s.url.trim(),
@@ -542,9 +520,9 @@ let history = [];
 let wakeLock = null;
 let hasTriggeredEnd = false;
 
-// Preloader cho bài kế
-let preloader = null;
-let preloaderUrl = '';
+// Preload blob: phát từ bộ nhớ, không cần mạng khi tắt màn hình
+const blobCache = new Map();
+let nextShuffleIdx = null;
 
 audio.volume = CONFIG.defaultVolume;
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
@@ -601,23 +579,43 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// PRELOAD bài kế
-function preloadNext() {
-  if (playlist.length < 2) return;
-  let nextIdx;
-  if (shuffleMode) return; // shuffle không preload
-  if (repeatMode === 'one') nextIdx = currentIndex;
-  else nextIdx = (currentIndex + 1) % playlist.length;
-
-  const url = playlist[nextIdx].url;
-  if (preloaderUrl === url) return;
-
+// PRELOAD các bài kế dạng blob
+async function prefetch(idx) {
+  const url = playlist[idx].url;
+  if (blobCache.has(url)) return;
+  blobCache.set(url, null);
   try {
-    preloader = new Audio();
-    preloader.preload = 'auto';
-    preloader.src = url;
-    preloaderUrl = url;
-  } catch (e) {}
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const blob = await res.blob();
+    blobCache.set(url, URL.createObjectURL(blob));
+  } catch (e) {
+    blobCache.delete(url);
+  }
+}
+
+function prefetchAhead() {
+  if (playlist.length < 2) return;
+  const idxs = [currentIndex];
+  if (shuffleMode) {
+    if (nextShuffleIdx === null || nextShuffleIdx === currentIndex) {
+      let r, a = 0;
+      do { r = Math.floor(Math.random() * playlist.length); a++; } while (r === currentIndex && a < 20);
+      nextShuffleIdx = r;
+    }
+    idxs.push(nextShuffleIdx);
+  } else {
+    idxs.push((currentIndex + 1) % playlist.length);
+    idxs.push((currentIndex + 2) % playlist.length);
+  }
+  const keep = new Set(idxs.map(i => playlist[i].url));
+  idxs.forEach(i => { if (i !== currentIndex) prefetch(i); });
+  for (const [url, blobUrl] of blobCache) {
+    if (!keep.has(url)) {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+      blobCache.delete(url);
+    }
+  }
 }
 
 // LOAD / PLAY / PAUSE — SYNC HOÀN TOÀN, KHÔNG setTimeout
@@ -634,13 +632,14 @@ function loadSong(index, autoPlay = false) {
   totalTimeEl.textContent = '0:00';
 
   // Gán src + load + (play) đồng bộ
-  audio.src = song.url;
+  audio.src = blobCache.get(song.url) || song.url;
   audio.load();
 
   updatePlaylistUI();
   updateMediaSession();
 
   if (autoPlay) playSong();
+  prefetchAhead();
 }
 
 function playSong() {
@@ -694,8 +693,11 @@ function nextSong(auto = false) {
   }
   if (shuffleMode && playlist.length > 1) {
     history.push(currentIndex);
-    let r, a = 0;
-    do { r = Math.floor(Math.random() * playlist.length); a++; } while (r === currentIndex && a < 20);
+    let r = nextShuffleIdx, a = 0;
+    nextShuffleIdx = null;
+    if (r === null || r === currentIndex) {
+      do { r = Math.floor(Math.random() * playlist.length); a++; } while (r === currentIndex && a < 20);
+    }
     loadSong(r, true);
   } else {
     const next = (currentIndex + 1) % playlist.length;
@@ -773,11 +775,6 @@ audio.addEventListener('timeupdate', () => {
     progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
     currentTimeEl.textContent = formatTime(audio.currentTime);
 
-    // Preload bài kế khi còn ~15s
-    if (audio.duration - audio.currentTime < 15) {
-      preloadNext();
-    }
-
     // Fallback chuyển bài khi sát cuối
     if (!hasTriggeredEnd && audio.currentTime > 2 && audio.duration - audio.currentTime < 0.3) {
       nextSong(true);
@@ -822,7 +819,8 @@ audio.addEventListener('stalled', () => {
 audio.addEventListener('play', () => setPlayingState(true));
 audio.addEventListener('pause', () => {
   // Chỉ cập nhật UI khi thực sự pause (không phải chuyển bài)
-  if (!hasTriggeredEnd) setPlayingState(false);
+  if (audio.ended || hasTriggeredEnd) return;
+  setPlayingState(false);
 });
 audio.addEventListener('error', () => {
   songTitle.textContent = '⚠️ Lỗi tải file';
@@ -858,6 +856,8 @@ shuffleBtn.addEventListener('click', () => {
   shuffleMode = !shuffleMode;
   shuffleBtn.classList.toggle('active', shuffleMode);
   history = [];
+  nextShuffleIdx = null;
+  prefetchAhead();
 });
 repeatBtn.addEventListener('click', () => {
   const modes = ['none', 'all', 'one'];
