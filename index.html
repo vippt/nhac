@@ -3,102 +3,359 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
   <title>Nhac.LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao</title>
-  <meta name="description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay cập nhật liên tục.">
+  <meta name="description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay, cập nhật liên tục tại LePhiPhi.Com. Trải nghiệm nghe nhạc mượt mà trên mọi thiết bị.">
+  <meta name="keywords" content="nghe nhạc, nhạc online, playlist, nhạc miễn phí, LePhiPhi, music player, nghe nhạc online">
+  <meta name="author" content="Nhac.lePhiPhi.Com">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <meta name="theme-color" content="#0f0f1e">
   <link rel="canonical" href="https://nhac.lephiphi.com/">
+
+  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+  <meta property="og:type" content="music.playlist">
+  <meta property="og:site_name" content="Nhac.LePhiPhi.Com">
+  <meta property="og:title" content="Nhac.LePhiPhi.Com - Nghe Nhạc Online Chất Lượng Cao">
+  <meta property="og:description" content="Nghe nhạc online miễn phí chất lượng cao. Playlist nhạc hay cập nhật liên tục.">
+  <meta property="og:url" content="https://nhac.lephiphi.com/">
+  <meta property="og:image" content="/logo.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:locale" content="vi_VN">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LePhiPhi.Com - Nghe Nhạc Online">
+  <meta name="twitter:description" content="Playlist nhạc hay miễn phí, chất lượng cao.">
+  <meta name="twitter:image" content="/logo.png">
+
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="LePhiPhi">
+  <meta name="application-name" content="LePhiPhi Music">
   <meta name="mobile-web-app-capable" content="yes">
   <link rel="manifest" id="manifest-link">
   <link rel="icon" id="favicon-link" type="image/png">
   <link rel="apple-touch-icon" id="apple-icon-link">
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MusicPlaylist",
+    "name": "Nhac.LePhiPhi.Com Music",
+    "description": "Playlist nhạc hay trực tuyến miễn phí",
+    "url": "https://nhac.lephiphi.com/",
+    "image": "http://nhac.lephiphi.com/logo.png",
+    "inLanguage": "vi-VN"
+  }
+  </script>
+
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  :root { --primary:#667eea; --secondary:#764ba2; --accent:#00d4ff; --bg:#0f0f1e; --border:rgba(255,255,255,.1); --text:#fff; --text-dim:rgba(255,255,255,.55); }
-  html, body { height:100%; overflow:hidden; overscroll-behavior:none; }
-  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); display:flex; justify-content:center; align-items:stretch; -webkit-font-smoothing:antialiased; user-select:none; position:fixed; inset:0; }
-  body::before { content:''; position:fixed; inset:-50%; background:radial-gradient(circle at 30% 20%,rgba(102,126,234,.25),transparent 50%),radial-gradient(circle at 70% 80%,rgba(118,75,162,.25),transparent 50%); animation:floatBg 20s ease-in-out infinite; z-index:0; }
+  :root {
+    --primary: #667eea; --secondary: #764ba2; --accent: #00d4ff;
+    --bg: #0f0f1e; --border: rgba(255,255,255,0.1);
+    --text: #fff; --text-dim: rgba(255,255,255,0.55);
+  }
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg); color: var(--text);
+    display: flex; justify-content: center; align-items: stretch;
+    -webkit-font-smoothing: antialiased; user-select: none;
+    position: fixed; inset: 0;
+  }
+  body::before {
+    content: ''; position: fixed; inset: -50%;
+    background: radial-gradient(circle at 30% 20%, rgba(102,126,234,0.25), transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(118,75,162,0.25), transparent 50%);
+    animation: floatBg 20s ease-in-out infinite; z-index: 0;
+  }
   @keyframes floatBg { 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-5%,5%) scale(1.1)} }
-  .player { position:relative; z-index:1; width:100%; max-width:480px; height:100%; display:flex; flex-direction:column; padding:calc(env(safe-area-inset-top) + 16px) 20px calc(env(safe-area-inset-bottom) + 16px); }
-  .top-section { flex-shrink:0; display:flex; flex-direction:column; align-items:center; padding-top:8px; }
-  .logo-wrap { position:relative; width:min(32.5vw,120px); aspect-ratio:1; margin-bottom:20px; display:flex; align-items:center; justify-content:center; }
-  .logo-wrap::before { content:''; position:absolute; inset:-8px; border-radius:50%; background:conic-gradient(from 0deg,transparent 0deg,rgba(102,126,234,.6) 60deg,rgba(0,212,255,.8) 180deg,rgba(118,75,162,.6) 300deg,transparent 360deg); opacity:0; transition:opacity .4s; animation:rotateRing 3s linear infinite; z-index:0; filter:blur(6px); }
-  .logo-wrap.playing::before { opacity:1; }
+
+  .player {
+    position: relative; z-index: 1; width: 100%; max-width: 480px; height: 100%;
+    display: flex; flex-direction: column;
+    padding: calc(env(safe-area-inset-top) + 16px) 20px calc(env(safe-area-inset-bottom) + 16px);
+  }
+  .top-section { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 8px; }
+
+  .logo-wrap {
+    position: relative; width: min(32.5vw, 120px); aspect-ratio: 1;
+    margin-bottom: 20px; display: flex; align-items: center; justify-content: center;
+  }
+  .logo-wrap::before {
+    content: ''; position: absolute; inset: -8px; border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0deg, rgba(102,126,234,0.6) 60deg,
+      rgba(0,212,255,0.8) 180deg, rgba(118,75,162,0.6) 300deg, transparent 360deg);
+    opacity: 0; transition: opacity 0.4s; animation: rotateRing 3s linear infinite;
+    z-index: 0; filter: blur(6px);
+  }
+  .logo-wrap.playing::before { opacity: 1; }
   @keyframes rotateRing { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-  .logo-disc { position:relative; width:100%; height:100%; border-radius:50%; background:radial-gradient(circle at 30% 30%,#1e1e3a,#0a0a18 70%); display:flex; align-items:center; justify-content:center; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 0 4px rgba(255,255,255,.03),inset 0 0 60px rgba(102,126,234,.15); z-index:1; }
-  .logo-disc::before { content:''; position:absolute; inset:8%; border-radius:50%; background:repeating-radial-gradient(circle at center,transparent 0px,transparent 3px,rgba(255,255,255,.02) 3px,rgba(255,255,255,.02) 4px); pointer-events:none; z-index:2; }
-  .logo-disc::after { content:''; position:absolute; inset:0; border-radius:50%; background:linear-gradient(135deg,rgba(255,255,255,.15) 0%,transparent 30%,transparent 70%,rgba(102,126,234,.1) 100%); pointer-events:none; z-index:3; }
-  .logo-inner { width:100%; height:100%; border-radius:50%; display:flex; align-items:center; justify-content:center; position:relative; z-index:1; }
-  .logo-inner.playing { animation:spinLogo 10s linear infinite; }
-  .logo-inner.paused { animation-play-state:paused; }
+
+  .logo-disc {
+    position: relative; width: 100%; height: 100%; border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #1e1e3a, #0a0a18 70%);
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 4px rgba(255,255,255,0.03),
+                inset 0 0 60px rgba(102,126,234,0.15); z-index: 1;
+  }
+  .logo-disc::before {
+    content: ''; position: absolute; inset: 8%; border-radius: 50%;
+    background: repeating-radial-gradient(circle at center, transparent 0px, transparent 3px,
+      rgba(255,255,255,0.02) 3px, rgba(255,255,255,0.02) 4px);
+    pointer-events: none; z-index: 2;
+  }
+  .logo-disc::after {
+    content: ''; position: absolute; inset: 0; border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 30%,
+      transparent 70%, rgba(102,126,234,0.1) 100%); pointer-events: none; z-index: 3;
+  }
+
+  .logo-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; z-index: 1;
+  }
+  .logo-inner.playing { animation: spinLogo 10s linear infinite; }
+  .logo-inner.paused { animation-play-state: paused; }
   @keyframes spinLogo { from{transform:rotate(0)} to{transform:rotate(360deg)} }
-  #logoImg { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
-  .logo-waves { position:absolute; bottom:6%; left:50%; transform:translateX(-50%); display:flex; gap:2px; align-items:flex-end; height:12px; z-index:4; }
-  .logo-waves span { width:2px; background:linear-gradient(to top,var(--primary),var(--accent)); border-radius:2px; height:30%; opacity:.85; }
-  .logo-wrap.playing .logo-waves span { animation:wave 1s ease-in-out infinite; }
-  .logo-waves span:nth-child(1){animation-delay:0s} .logo-waves span:nth-child(2){animation-delay:.1s}
-  .logo-waves span:nth-child(3){animation-delay:.2s} .logo-waves span:nth-child(4){animation-delay:.3s}
-  .logo-waves span:nth-child(5){animation-delay:.4s} .logo-waves span:nth-child(6){animation-delay:.15s}
-  .logo-waves span:nth-child(7){animation-delay:.25s}
-  @keyframes wave { 0%,100%{height:30%;opacity:.6} 50%{height:100%;opacity:1} }
-  .center-hole { position:absolute; top:50%; left:50%; width:12px; height:12px; background:radial-gradient(circle,#0a0a18 30%,#1e1e3a 100%); border-radius:50%; transform:translate(-50%,-50%); box-shadow:inset 0 0 8px rgba(0,0,0,.9),0 0 0 3px rgba(255,255,255,.05); z-index:5; }
-  .center-hole::after { content:''; position:absolute; top:50%; left:50%; width:4px; height:4px; background:var(--primary); border-radius:50%; transform:translate(-50%,-50%); box-shadow:0 0 10px var(--primary); }
-  .song-title { font-size:18px; font-weight:700; text-align:center; margin-bottom:4px; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-  .song-artist { font-size:13px; color:var(--text-dim); text-align:center; margin-bottom:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; }
-  .progress-container { width:100%; margin-bottom:14px; }
-  .progress-bar { width:100%; height:20px; display:flex; align-items:center; cursor:pointer; touch-action:none; position:relative; }
-  .progress-track { width:100%; height:4px; background:rgba(255,255,255,.15); border-radius:2px; position:relative; }
-  .progress-fill { height:100%; background:linear-gradient(90deg,var(--primary),var(--accent)); border-radius:2px; width:0%; position:relative; pointer-events:none; }
-  .progress-fill::after { content:''; position:absolute; right:-6px; top:50%; width:12px; height:12px; background:#fff; border-radius:50%; transform:translateY(-50%); box-shadow:0 2px 8px rgba(102,126,234,.8); opacity:0; transition:opacity .2s; }
-  .progress-bar:hover .progress-fill::after, .progress-bar.dragging .progress-fill::after { opacity:1; }
-  .time-display { display:flex; justify-content:space-between; font-size:11px; color:var(--text-dim); margin-top:2px; font-variant-numeric:tabular-nums; }
-  .controls { display:flex; justify-content:center; align-items:center; gap:18px; margin-bottom:14px; flex-shrink:0; }
-  .btn { background:transparent; border:none; color:var(--text); width:44px; height:44px; border-radius:50%; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .15s,background .15s; flex-shrink:0; }
-  .btn svg { width:22px; height:22px; fill:currentColor; }
-  .btn:active { transform:scale(.9); background:rgba(255,255,255,.1); }
-  .btn-secondary { color:var(--text-dim); }
-  .btn-secondary.active { color:var(--accent); }
-  .btn-play { width:62px; height:62px; background:linear-gradient(135deg,var(--primary),var(--secondary)); box-shadow:0 8px 24px rgba(102,126,234,.45); }
-  .btn-play svg { width:26px; height:26px; }
-  .btn-play:active { transform:scale(.92); }
-  .playlist-wrap { flex:1; min-height:0; display:flex; flex-direction:column; border-top:1px solid var(--border); padding-top:12px; }
-  .playlist-header { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; padding-left:4px; flex-shrink:0; }
-  .playlist-header .brand { color:var(--accent); font-weight:700; }
-  .playlist { flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; padding-bottom:80px; }
-  .playlist::-webkit-scrollbar { width:4px; }
-  .playlist::-webkit-scrollbar-thumb { background:rgba(255,255,255,.15); border-radius:2px; }
-  .playlist-item { display:flex; align-items:center; padding:10px 8px; border-radius:10px; cursor:pointer; transition:background .15s; margin-bottom:2px; }
-  .playlist-item:active { background:rgba(255,255,255,.08); }
-  .playlist-item.active { background:rgba(102,126,234,.18); }
-  .item-cover { width:40px; height:40px; border-radius:8px; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; overflow:hidden; font-weight:900; color:#fff; }
-  .item-cover img { width:100%; height:100%; object-fit:cover; }
-  .item-info { flex:1; margin-left:12px; min-width:0; }
-  .item-title { font-size:13.5px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-  .playlist-item.active .item-title { color:var(--accent); }
-  .item-artist { font-size:11.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
-  .playing-indicator { display:none; gap:2px; align-items:flex-end; height:14px; margin-left:8px; flex-shrink:0; }
-  .playlist-item.active .playing-indicator { display:flex; }
-  .playing-indicator span { width:3px; background:var(--accent); border-radius:1.5px; animation:equalize .8s ease-in-out infinite; }
-  .playing-indicator span:nth-child(1){height:40%;animation-delay:0s} .playing-indicator span:nth-child(2){height:80%;animation-delay:.2s} .playing-indicator span:nth-child(3){height:55%;animation-delay:.4s}
-  .playlist-item.paused .playing-indicator span { animation-play-state:paused; }
-  @keyframes equalize { 0%,100%{transform:scaleY(.4)} 50%{transform:scaleY(1)} }
-  .empty-state { text-align:center; padding:30px 20px; color:var(--text-dim); font-size:13px; line-height:1.6; }
-  .install-btn { position:fixed; bottom:calc(env(safe-area-inset-bottom) + 20px); right:20px; width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); border:none; color:#fff; display:none; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 8px 28px rgba(102,126,234,.55),0 0 0 4px rgba(102,126,234,.15); z-index:500; animation:pwaBounce 2s ease-in-out infinite; }
-  .install-btn.show { display:flex; }
-  .install-btn svg { width:26px; height:26px; fill:#fff; }
-  @keyframes pwaBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
-  .install-tooltip { position:fixed; bottom:calc(env(safe-area-inset-bottom) + 90px); right:20px; background:rgba(0,0,0,.9); color:#fff; padding:10px 14px; border-radius:12px; font-size:12px; max-width:240px; line-height:1.5; z-index:499; display:none; box-shadow:0 8px 24px rgba(0,0,0,.6); border:1px solid rgba(255,255,255,.1); }
-  .install-tooltip.show { display:block; }
-  .unmute-overlay { position:fixed; inset:0; background:rgba(0,0,0,.75); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); z-index:999; display:none; align-items:center; justify-content:center; flex-direction:column; gap:20px; padding:20px; text-align:center; }
-  .unmute-overlay.show { display:flex; }
-  .unmute-btn { width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,var(--primary),var(--secondary)); border:none; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 10px 40px rgba(102,126,234,.6); animation:pulse 2s ease-in-out infinite; }
-  .unmute-btn svg { width:42px; height:42px; fill:#fff; }
-  @keyframes pulse { 0%,100%{transform:scale(1);box-shadow:0 10px 40px rgba(102,126,234,.6)} 50%{transform:scale(1.05);box-shadow:0 10px 50px rgba(102,126,234,.9)} }
-  .unmute-text { font-size:15px; color:rgba(255,255,255,.85); max-width:280px; line-height:1.5; }
-  .unmute-brand { font-size:13px; color:var(--accent); font-weight:700; letter-spacing:2px; margin-top:8px; }
-  .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-  @media (max-height:700px) { .logo-wrap{width:min(24vw,85px);margin-bottom:12px} .song-title{font-size:16px} .btn-play{width:54px;height:54px} .btn-play svg{width:22px;height:22px} .controls{gap:14px;margin-bottom:10px} .center-hole{width:9px;height:9px} .logo-waves{height:9px} }
+
+  #logoImg {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
+    display: block;
+  }
+
+  .logo-waves {
+    position: absolute; bottom: 6%; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 2px; align-items: flex-end; height: 12px; z-index: 4;
+  }
+  .logo-waves span {
+    width: 2px; background: linear-gradient(to top, var(--primary), var(--accent));
+    border-radius: 2px; height: 30%; opacity: 0.85;
+  }
+  .logo-wrap.playing .logo-waves span { animation: wave 1s ease-in-out infinite; }
+  .logo-waves span:nth-child(1){animation-delay:0s}
+  .logo-waves span:nth-child(2){animation-delay:0.1s}
+  .logo-waves span:nth-child(3){animation-delay:0.2s}
+  .logo-waves span:nth-child(4){animation-delay:0.3s}
+  .logo-waves span:nth-child(5){animation-delay:0.4s}
+  .logo-waves span:nth-child(6){animation-delay:0.15s}
+  .logo-waves span:nth-child(7){animation-delay:0.25s}
+  @keyframes wave { 0%,100%{height:30%;opacity:0.6} 50%{height:100%;opacity:1} }
+
+  .center-hole {
+    position: absolute; top: 50%; left: 50%; width: 12px; height: 12px;
+    background: radial-gradient(circle, #0a0a18 30%, #1e1e3a 100%);
+    border-radius: 50%; transform: translate(-50%, -50%);
+    box-shadow: inset 0 0 8px rgba(0,0,0,0.9), 0 0 0 3px rgba(255,255,255,0.05); z-index: 5;
+  }
+  .center-hole::after {
+    content: ''; position: absolute; top: 50%; left: 50%; width: 4px; height: 4px;
+    background: var(--primary); border-radius: 50%; transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px var(--primary);
+  }
+
+  .song-title {
+    font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 4px;
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .song-artist {
+    font-size: 13px; color: var(--text-dim); text-align: center; margin-bottom: 16px;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%;
+  }
+  .progress-container { width: 100%; margin-bottom: 14px; }
+  .progress-bar {
+    width: 100%; height: 20px; display: flex; align-items: center;
+    cursor: pointer; touch-action: none; position: relative;
+  }
+  .progress-track {
+    width: 100%; height: 4px; background: rgba(255,255,255,0.15);
+    border-radius: 2px; position: relative;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 2px; width: 0%; position: relative; pointer-events: none;
+  }
+  .progress-fill::after {
+    content: ''; position: absolute; right: -6px; top: 50%; width: 12px; height: 12px;
+    background: #fff; border-radius: 50%; transform: translateY(-50%);
+    box-shadow: 0 2px 8px rgba(102,126,234,0.8); opacity: 0; transition: opacity 0.2s;
+  }
+  .progress-bar:hover .progress-fill::after,
+  .progress-bar.dragging .progress-fill::after { opacity: 1; }
+  .time-display {
+    display: flex; justify-content: space-between; font-size: 11px;
+    color: var(--text-dim); margin-top: 2px; font-variant-numeric: tabular-nums;
+  }
+
+  .controls {
+    display: flex; justify-content: center; align-items: center;
+    gap: 18px; margin-bottom: 14px; flex-shrink: 0;
+  }
+  .btn {
+    background: transparent; border: none; color: var(--text);
+    width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, background 0.15s; flex-shrink: 0;
+  }
+  .btn svg { width: 22px; height: 22px; fill: currentColor; }
+  .btn:active { transform: scale(0.9); background: rgba(255,255,255,0.1); }
+  .btn-secondary { color: var(--text-dim); }
+  .btn-secondary.active { color: var(--accent); }
+  .btn-play {
+    width: 62px; height: 62px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    box-shadow: 0 8px 24px rgba(102,126,234,0.45);
+  }
+  .btn-play svg { width: 26px; height: 26px; }
+  .btn-play:active { transform: scale(0.92); }
+
+  .playlist-wrap {
+    flex: 1; min-height: 0; display: flex; flex-direction: column;
+    border-top: 1px solid var(--border); padding-top: 12px;
+  }
+  .playlist-header {
+    font-size: 11px; color: var(--text-dim); text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: 8px; padding-left: 4px; flex-shrink: 0;
+  }
+  .playlist-header .brand { color: var(--accent); font-weight: 700; }
+  .playlist {
+    flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; padding-bottom: 80px;
+  }
+  .playlist::-webkit-scrollbar { width: 4px; }
+  .playlist::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+  .playlist-item {
+    display: flex; align-items: center; padding: 10px 8px; border-radius: 10px;
+    cursor: pointer; transition: background 0.15s; margin-bottom: 2px;
+  }
+  .playlist-item:active { background: rgba(255,255,255,0.08); }
+  .playlist-item.active { background: rgba(102,126,234,0.18); }
+  .item-cover {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0; overflow: hidden; font-weight: 900; color: #fff;
+  }
+  .item-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .item-info { flex: 1; margin-left: 12px; min-width: 0; }
+  .item-title {
+    font-size: 13.5px; font-weight: 500; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .playlist-item.active .item-title { color: var(--accent); }
+  .item-artist {
+    font-size: 11.5px; color: var(--text-dim); white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; margin-top: 2px;
+  }
+  .playing-indicator {
+    display: none; gap: 2px; align-items: flex-end;
+    height: 14px; margin-left: 8px; flex-shrink: 0;
+  }
+  .playlist-item.active .playing-indicator { display: flex; }
+  .playing-indicator span {
+    width: 3px; background: var(--accent); border-radius: 1.5px;
+    animation: equalize 0.8s ease-in-out infinite;
+  }
+  .playing-indicator span:nth-child(1) { height: 40%; animation-delay: 0s; }
+  .playing-indicator span:nth-child(2) { height: 80%; animation-delay: 0.2s; }
+  .playing-indicator span:nth-child(3) { height: 55%; animation-delay: 0.4s; }
+  .playlist-item.paused .playing-indicator span { animation-play-state: paused; }
+  @keyframes equalize { 0%,100%{transform:scaleY(0.4)} 50%{transform:scaleY(1)} }
+  .empty-state {
+    text-align: center; padding: 30px 20px; color: var(--text-dim);
+    font-size: 13px; line-height: 1.6;
+  }
+
+  .install-btn {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom) + 20px);
+    right: 20px;
+    width: 58px; height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none; color: #fff; display: none; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 8px 28px rgba(102,126,234,0.55), 0 0 0 4px rgba(102,126,234,0.15);
+    z-index: 500; transition: transform 0.2s, box-shadow 0.2s;
+    animation: pwaBounce 2s ease-in-out infinite;
+  }
+  .install-btn.show { display: flex; }
+  .install-btn:hover { transform: scale(1.08); box-shadow: 0 10px 36px rgba(102,126,234,0.75), 0 0 0 6px rgba(102,126,234,0.2); }
+  .install-btn:active { transform: scale(0.95); }
+  .install-btn svg { width: 26px; height: 26px; fill: #fff; }
+
+  @keyframes pwaBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .install-tooltip {
+    position: fixed;
+    bottom: calc(env(safe-area-inset-bottom) + 90px);
+    right: 20px; background: rgba(0,0,0,0.9); color: #fff;
+    padding: 10px 14px; border-radius: 12px; font-size: 12px;
+    max-width: 240px; line-height: 1.5; z-index: 499; display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+    animation: fadeIn 0.3s;
+  }
+  .install-tooltip.show { display: block; }
+  .install-tooltip::after {
+    content: ''; position: absolute; bottom: -6px; right: 24px;
+    width: 12px; height: 12px; background: rgba(0,0,0,0.9);
+    transform: rotate(45deg); border-right: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  .unmute-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    z-index: 999; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 20px; padding: 20px; text-align: center;
+  }
+  .unmute-overlay.show { display: flex; }
+  .unmute-btn {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none; color: #fff; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: 0 10px 40px rgba(102,126,234,0.6);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .unmute-btn svg { width: 42px; height: 42px; fill: #fff; }
+  .unmute-btn:active { transform: scale(0.95); }
+  @keyframes pulse {
+    0%,100%{transform:scale(1);box-shadow:0 10px 40px rgba(102,126,234,0.6)}
+    50%{transform:scale(1.05);box-shadow:0 10px 50px rgba(102,126,234,0.9)}
+  }
+  .unmute-text { font-size: 15px; color: rgba(255,255,255,0.85); max-width: 280px; line-height: 1.5; }
+  .unmute-brand { font-size: 13px; color: var(--accent); font-weight: 700; letter-spacing: 2px; margin-top: 8px; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  @media (max-height: 700px) {
+    .logo-wrap { width: min(24vw, 85px); margin-bottom: 12px; }
+    .song-title { font-size: 16px; }
+    .btn-play { width: 54px; height: 54px; }
+    .btn-play svg { width: 22px; height: 22px; }
+    .controls { gap: 14px; margin-bottom: 10px; }
+    .center-hole { width: 9px; height: 9px; }
+    .logo-waves { height: 9px; }
+    .install-btn { width: 52px; height: 52px; }
+    .install-btn svg { width: 22px; height: 22px; }
+  }
+  @media (max-height: 600px) {
+    .logo-wrap { width: min(20vw, 65px); margin-bottom: 8px; }
+    .song-artist { margin-bottom: 10px; }
+  }
 </style>
 </head>
 <body>
@@ -110,45 +367,72 @@
     <div class="logo-wrap" id="logoWrap">
       <div class="logo-disc">
         <div class="logo-inner" id="logoInner">
-          <img id="logoImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="LePhiPhi Logo">
+          <img id="logoImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt="LePhiPhi.Com Logo">
         </div>
-        <div class="logo-waves"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="logo-waves">
+          <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
       </div>
       <div class="center-hole"></div>
     </div>
+
     <div class="song-title" id="songTitle">Đang tải...</div>
     <div class="song-artist" id="songArtist">Vui lòng chờ</div>
+
     <div class="progress-container">
-      <div class="progress-bar" id="progressBar"><div class="progress-track"><div class="progress-fill" id="progressFill"></div></div></div>
-      <div class="time-display"><span id="currentTime">0:00</span><span id="totalTime">0:00</span></div>
+      <div class="progress-bar" id="progressBar">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      </div>
+      <div class="time-display">
+        <span id="currentTime">0:00</span>
+        <span id="totalTime">0:00</span>
+      </div>
     </div>
+
     <div class="controls">
-      <button class="btn btn-secondary" id="shuffleBtn" aria-label="Ngẫu nhiên"><svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg></button>
-      <button class="btn" id="prevBtn" aria-label="Bài trước"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-      <button class="btn btn-play" id="playBtn" aria-label="Phát / Tạm dừng"><svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-      <button class="btn" id="nextBtn" aria-label="Bài tiếp"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
-      <button class="btn btn-secondary" id="repeatBtn" aria-label="Lặp lại"><svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg></button>
+      <button class="btn btn-secondary" id="shuffleBtn" aria-label="Phát ngẫu nhiên">
+        <svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>
+      </button>
+      <button class="btn" id="prevBtn" aria-label="Bài trước">
+        <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+      </button>
+      <button class="btn btn-play" id="playBtn" aria-label="Phát / Tạm dừng">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button class="btn" id="nextBtn" aria-label="Bài tiếp">
+        <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+      </button>
+      <button class="btn btn-secondary" id="repeatBtn" aria-label="Lặp lại">
+        <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+      </button>
     </div>
   </div>
+
   <div class="playlist-wrap">
-    <div class="playlist-header">Danh sách phát · <span id="playlistCount">0</span> bài · <span class="brand">LePhiPhi.Com</span></div>
+    <div class="playlist-header">
+      Danh sách phát · <span id="playlistCount">0</span> bài · <span class="brand">LePhiPhi.Com</span>
+    </div>
     <div class="playlist" id="playlistList"></div>
   </div>
 </div>
 
-<audio id="audio" preload="auto" playsinline webkit-playsinline></audio>
+<audio id="audio" preload="auto" playsinline webkit-playsinline crossorigin="anonymous"></audio>
 
-<button class="install-btn" id="installBtn" aria-label="Cài đặt"><svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg></button>
-<div class="install-tooltip" id="installTooltip">Nhấn để cài ứng dụng 📱</div>
+<button class="install-btn" id="installBtn" aria-label="Cài đặt ứng dụng">
+  <svg viewBox="0 0 24 24"><path d="M5 20h14v-2H5v2zM19 9h-4V3H9v6H5l7 7 7-7z"/></svg>
+</button>
+<div class="install-tooltip" id="installTooltip">
+  Nhấn để cài ứng dụng lên màn hình chính 📱
+</div>
 
 <div class="unmute-overlay" id="unmuteOverlay">
-  <button class="unmute-btn" id="unmuteBtn" aria-label="Phát nhạc"><svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg></button>
+  <button class="unmute-btn" id="unmuteBtn" aria-label="Phát nhạc">
+    <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+  </button>
   <div class="unmute-text">Nhấn để bắt đầu phát nhạc 🎶<div class="unmute-brand">LePhiPhi.Com</div></div>
 </div>
 
 <script>
-'use strict';
-
 const CONFIG = {
   logoUrl: 'https://nhac.lephiphi.com/logo.png',
   songs: [
@@ -165,30 +449,65 @@ const CONFIG = {
   defaultVolume: 0.8,
 };
 
+// Set SEO Images & Favicon
 if (CONFIG.logoUrl && CONFIG.logoUrl.startsWith('http')) {
   document.getElementById('favicon-link').href = CONFIG.logoUrl;
   document.getElementById('apple-icon-link').href = CONFIG.logoUrl;
+  document.querySelector('meta[property="og:image"]').setAttribute('content', CONFIG.logoUrl);
+  document.querySelector('meta[name="twitter:image"]').setAttribute('content', CONFIG.logoUrl);
 }
 
+// Manifest
 const manifestData = {
-  name: 'LePhiPhi.Com Music', short_name: 'LePhiPhi',
-  start_url: location.origin + location.pathname, scope: location.origin + '/',
-  display: 'standalone', orientation: 'portrait',
-  background_color: '#0f0f1e', theme_color: '#0f0f1e', lang: 'vi',
+  name: 'LePhiPhi.Com Music',
+  short_name: 'LePhiPhi',
+  description: 'Nghe nhạc online miễn phí chất lượng cao',
+  start_url: location.origin + location.pathname,
+  scope: location.origin + '/',
+  display: 'standalone',
+  orientation: 'portrait',
+  background_color: '#0f0f1e',
+  theme_color: '#0f0f1e',
+  lang: 'vi',
   icons: [
     { src: CONFIG.logoUrl, sizes: '192x192', type: 'image/png', purpose: 'any' },
     { src: CONFIG.logoUrl, sizes: '512x512', type: 'image/png', purpose: 'any' },
     { src: CONFIG.logoUrl, sizes: '512x512', type: 'image/png', purpose: 'maskable' }
   ]
 };
-document.getElementById('manifest-link').href = URL.createObjectURL(new Blob([JSON.stringify(manifestData)], { type: 'application/json' }));
+const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+document.getElementById('manifest-link').href = URL.createObjectURL(manifestBlob);
 
+// Register SW
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  const swCode = `
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => self.clients.claim());
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      if (e.request.url.endsWith('.mp3') || e.request.destination === 'audio') {
+        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+        return;
+      }
+      e.respondWith(
+        caches.match(e.request).then(cached => cached || fetch(e.request))
+      );
+    });
+  `;
+  const swBlob = new Blob([swCode], { type: 'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob))
+    .then(() => console.log('✅ PWA Service Worker đã đăng ký'))
+    .catch(err => console.warn('SW không đăng ký được:', err));
+}
+
+// Playlist
 const playlist = CONFIG.songs.map((s, i) => ({
   url: s.url.trim(),
   title: s.title || 'Bài hát ' + (i + 1),
   artist: s.artist || '',
 }));
 
+// DOM
 const audio = document.getElementById('audio');
 const playBtn = document.getElementById('playBtn');
 const playIcon = document.getElementById('playIcon');
@@ -214,7 +533,6 @@ const installTooltip = document.getElementById('installTooltip');
 
 if (CONFIG.logoUrl) logoImg.src = CONFIG.logoUrl;
 
-// ============ STATE ============
 let currentIndex = 0;
 let isPlaying = false;
 let isSeeking = false;
@@ -222,32 +540,42 @@ let shuffleMode = false;
 let repeatMode = 'none';
 let history = [];
 let wakeLock = null;
-let endGuard = false;        // Chặn gọi chuyển bài 2 lần cho CÙNG 1 lần kết thúc
-let advanceToken = 0;        // Token tăng mỗi lần advance, chống race
-let heartbeatTimer = null;
-const HEARTBEAT_MS = 1000;
+let hasTriggeredEnd = false;
+
+// Preloader cho bài kế
+let preloader = null;
+let preloaderUrl = '';
 
 audio.volume = CONFIG.defaultVolume;
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
-// ============ WAKE LOCK ============
+// Wake Lock
 async function requestWakeLock() {
   if ('wakeLock' in navigator && document.visibilityState === 'visible') {
-    try { wakeLock = await navigator.wakeLock.request('screen'); } catch (e) {}
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
   }
 }
 function releaseWakeLock() {
-  if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }).catch(() => {}); }
+  if (wakeLock) { wakeLock.release().then(() => { wakeLock = null; }); }
 }
 
-// ============ RENDER ============
+document.addEventListener('visibilitychange', async () => {
+  if (wakeLock !== null && document.visibilityState === 'visible') {
+    await requestWakeLock();
+  }
+  // Không ép play lại khi tab quay về visible — để Media Session tự xử lý
+});
+
+// RENDER PLAYLIST
 function renderPlaylist() {
   playlistCount.textContent = playlist.length;
   playlistList.innerHTML = '';
+
   if (playlist.length === 0) {
-    playlistList.innerHTML = '<div class="empty-state">Chưa có bài hát nào.</div>';
+    playlistList.innerHTML = `<div class="empty-state">Chưa có bài hát nào.<br>Dán link MP3 vào mảng <b>songs</b> trong CONFIG.</div>`;
     return;
   }
+
   playlist.forEach((song, index) => {
     const item = document.createElement('div');
     item.className = 'playlist-item' + (index === currentIndex ? ' active' : '');
@@ -261,24 +589,42 @@ function renderPlaylist() {
     `;
     item.addEventListener('click', () => {
       if (index === currentIndex) togglePlay();
-      else playIndex(index);
+      else loadSong(index, true);
     });
     playlistList.appendChild(item);
   });
 }
+
 function escapeHtml(str) {
   const div = document.createElement('div');
   div.textContent = str;
   return div.innerHTML;
 }
 
-// ============ CORE: playIndex ============
-// Gán src MỚI và gọi play() — dùng chung cho mọi trường hợp chuyển bài
-function playIndex(index) {
+// PRELOAD bài kế
+function preloadNext() {
+  if (playlist.length < 2) return;
+  let nextIdx;
+  if (shuffleMode) return; // shuffle không preload
+  if (repeatMode === 'one') nextIdx = currentIndex;
+  else nextIdx = (currentIndex + 1) % playlist.length;
+
+  const url = playlist[nextIdx].url;
+  if (preloaderUrl === url) return;
+
+  try {
+    preloader = new Audio();
+    preloader.preload = 'auto';
+    preloader.src = url;
+    preloaderUrl = url;
+  } catch (e) {}
+}
+
+// LOAD / PLAY / PAUSE — SYNC HOÀN TOÀN, KHÔNG setTimeout
+function loadSong(index, autoPlay = false) {
   if (index < 0 || index >= playlist.length) return;
-  const token = ++advanceToken;
   currentIndex = index;
-  endGuard = false;
+  hasTriggeredEnd = false;
 
   const song = playlist[index];
   songTitle.textContent = song.title;
@@ -287,105 +633,42 @@ function playIndex(index) {
   currentTimeEl.textContent = '0:00';
   totalTimeEl.textContent = '0:00';
 
-  // Gán src mới và load
+  // Gán src + load + (play) đồng bộ
   audio.src = song.url;
   audio.load();
 
   updatePlaylistUI();
   updateMediaSession();
 
-  // Gọi play ngay — nếu browser chặn vì màn hình tắt, heartbeat sẽ retry
-  const p = audio.play();
-  if (p && p.then) {
-    p.then(() => {
-      if (token === advanceToken) {
-        isPlaying = true;
-        updatePlayStateUI(true);
-        hideUnmuteOverlay();
-        requestWakeLock();
-      }
-    }).catch(err => {
-      if (token !== advanceToken) return;
-      if (err.name === 'NotAllowedError') {
-        showUnmuteOverlay();
-      } else {
-        // Không phải do user gesture — thử lại nhờ heartbeat
-        console.warn('play() failed:', err.name);
-      }
-      isPlaying = false;
-      updatePlayStateUI(false);
-    });
-  }
-}
-
-// Chuyển bài tiếp theo — được gọi từ ended / next button / heartbeat
-function advance(auto) {
-  if (playlist.length === 0) return;
-  if (endGuard) return;            // Đã xử lý cho bài hiện tại
-  endGuard = true;
-
-  if (repeatMode === 'one') {
-    audio.currentTime = 0;
-    const p = audio.play();
-    if (p && p.catch) p.catch(() => {});
-    return;
-  }
-
-  let nextIdx;
-  if (shuffleMode && playlist.length > 1) {
-    history.push(currentIndex);
-    let a = 0;
-    do { nextIdx = Math.floor(Math.random() * playlist.length); a++; }
-    while (nextIdx === currentIndex && a < 20);
-  } else {
-    nextIdx = (currentIndex + 1) % playlist.length;
-    if (nextIdx === 0 && repeatMode === 'none' && auto) {
-      // Hết playlist
-      audio.pause();
-      isPlaying = false;
-      updatePlayStateUI(false);
-      currentIndex = 0;
-      const s = playlist[0];
-      songTitle.textContent = s.title;
-      songArtist.textContent = s.artist || 'Không rõ';
-      progressFill.style.width = '0%';
-      currentTimeEl.textContent = '0:00';
-      totalTimeEl.textContent = '0:00';
-      audio.src = s.url;
-      updatePlaylistUI();
-      return;
-    }
-  }
-  playIndex(nextIdx);
+  if (autoPlay) playSong();
 }
 
 function playSong() {
   if (playlist.length === 0) return;
+  hasTriggeredEnd = false;
   const p = audio.play();
-  if (p && p.then) {
+  if (p !== undefined) {
     p.then(() => {
-      isPlaying = true;
-      updatePlayStateUI(true);
+      setPlayingState(true);
       hideUnmuteOverlay();
       requestWakeLock();
     }).catch(err => {
-      isPlaying = false;
-      updatePlayStateUI(false);
+      setPlayingState(false);
       if (err.name === 'NotAllowedError') showUnmuteOverlay();
+      else { songTitle.textContent = '⚠️ Lỗi phát'; songArtist.textContent = 'Kiểm tra link MP3'; }
     });
   }
 }
 
 function pauseSong() {
   audio.pause();
-  isPlaying = false;
-  updatePlayStateUI(false);
+  setPlayingState(false);
   releaseWakeLock();
 }
 
 function togglePlay() { isPlaying ? pauseSong() : playSong(); }
 
-function updatePlayStateUI(playing) {
+function setPlayingState(playing) {
   isPlaying = playing;
   playIcon.innerHTML = playing ? ICONS.pause : ICONS.play;
   if (playing) {
@@ -397,14 +680,44 @@ function updatePlayStateUI(playing) {
     logoWrap.classList.remove('playing');
   }
   updatePlaylistUI();
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.playbackState = playing ? 'playing' : 'paused';
+  updateMediaSessionState();
+}
+
+function nextSong(auto = false) {
+  if (playlist.length === 0 || hasTriggeredEnd) return;
+  hasTriggeredEnd = true;
+
+  if (repeatMode === 'one' && auto) {
+    audio.currentTime = 0;
+    playSong();
+    return;
   }
-  if (playing) startHeartbeat(); else stopHeartbeat();
+  if (shuffleMode && playlist.length > 1) {
+    history.push(currentIndex);
+    let r, a = 0;
+    do { r = Math.floor(Math.random() * playlist.length); a++; } while (r === currentIndex && a < 20);
+    loadSong(r, true);
+  } else {
+    const next = (currentIndex + 1) % playlist.length;
+    if (next === 0 && repeatMode === 'none' && auto) {
+      pauseSong();
+      loadSong(0, false);
+      return;
+    }
+    loadSong(next, true);
+  }
+}
+
+function prevSong() {
+  if (playlist.length === 0) return;
+  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
+  if (shuffleMode && history.length > 0) loadSong(history.pop(), true);
+  else loadSong((currentIndex - 1 + playlist.length) % playlist.length, true);
 }
 
 function updatePlaylistUI() {
-  playlistList.querySelectorAll('.playlist-item').forEach((item, i) => {
+  const items = playlistList.querySelectorAll('.playlist-item');
+  items.forEach((item, i) => {
     item.classList.toggle('active', i === currentIndex);
     item.classList.toggle('paused', !isPlaying);
   });
@@ -415,33 +728,7 @@ function formatTime(sec) {
   return `${Math.floor(sec / 60)}:${Math.floor(sec % 60).toString().padStart(2, '0')}`;
 }
 
-// ============ HEARTBEAT (backup cuối cùng) ============
-function startHeartbeat() {
-  if (heartbeatTimer) return;
-  heartbeatTimer = setInterval(() => {
-    if (!isPlaying) return;
-
-    // Nếu audio đang PAUSED nhưng đáng lẽ phải PLAY → cố gắng play lại
-    if (audio.paused && !audio.ended) {
-      const p = audio.play();
-      if (p && p.catch) p.catch(() => {});
-      return;
-    }
-
-    // Nếu audio gần hết → chuyển bài (bù cho trường hợp ended bị throttle)
-    if (audio.duration > 0 && isFinite(audio.duration) &&
-        audio.currentTime > 1 &&
-        audio.duration - audio.currentTime < 1.5 &&
-        !endGuard) {
-      advance(true);
-    }
-  }, HEARTBEAT_MS);
-}
-function stopHeartbeat() {
-  if (heartbeatTimer) { clearInterval(heartbeatTimer); heartbeatTimer = null; }
-}
-
-// ============ MEDIA SESSION ============
+// MEDIA SESSION
 function updateMediaSession() {
   if ('mediaSession' in navigator && playlist.length > 0) {
     const s = playlist[currentIndex];
@@ -454,41 +741,58 @@ function updateMediaSession() {
         { src: CONFIG.logoUrl, sizes: '512x512', type: 'image/png' }
       ]
     });
+    updateMediaSessionState();
   }
 }
+
+function updateMediaSessionState() {
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+  }
+}
+
 if ('mediaSession' in navigator) {
-  navigator.mediaSession.setActionHandler('play', () => playSong());
-  navigator.mediaSession.setActionHandler('pause', () => pauseSong());
-  navigator.mediaSession.setActionHandler('previoustrack', () => {
-    if (audio.currentTime > 3) { audio.currentTime = 0; return; }
-    endGuard = false;
-    if (shuffleMode && history.length > 0) playIndex(history.pop());
-    else playIndex((currentIndex - 1 + playlist.length) % playlist.length);
-  });
-  navigator.mediaSession.setActionHandler('nexttrack', () => {
-    endGuard = false;
-    advance(false);
-  });
-  navigator.mediaSession.setActionHandler('seekto', (d) => {
-    if (d.seekTime !== undefined && audio.duration) audio.currentTime = d.seekTime;
+  navigator.mediaSession.setActionHandler('play', () => { playSong(); });
+  navigator.mediaSession.setActionHandler('pause', () => { pauseSong(); });
+  navigator.mediaSession.setActionHandler('previoustrack', () => { prevSong(); });
+  navigator.mediaSession.setActionHandler('nexttrack', () => { nextSong(false); });
+  navigator.mediaSession.setActionHandler('seekto', (details) => {
+    if (details.seekTime !== undefined && audio.duration) {
+      audio.currentTime = details.seekTime;
+    }
   });
 }
 
-// ============ EVENTS ============
+// EVENTS
 playBtn.addEventListener('click', togglePlay);
-nextBtn.addEventListener('click', () => { endGuard = false; advance(false); });
-prevBtn.addEventListener('click', () => {
-  if (audio.currentTime > 3) { audio.currentTime = 0; return; }
-  endGuard = false;
-  if (shuffleMode && history.length > 0) playIndex(history.pop());
-  else playIndex((currentIndex - 1 + playlist.length) % playlist.length);
-});
+nextBtn.addEventListener('click', () => nextSong(false));
+prevBtn.addEventListener('click', prevSong);
 
 audio.addEventListener('timeupdate', () => {
-  if (isSeeking) return;
-  if (!audio.duration || !isFinite(audio.duration)) return;
-  progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-  currentTimeEl.textContent = formatTime(audio.currentTime);
+  if (!isSeeking && audio.duration && isFinite(audio.duration)) {
+    progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
+    currentTimeEl.textContent = formatTime(audio.currentTime);
+
+    // Preload bài kế khi còn ~15s
+    if (audio.duration - audio.currentTime < 15) {
+      preloadNext();
+    }
+
+    // Fallback chuyển bài khi sát cuối
+    if (!hasTriggeredEnd && audio.currentTime > 2 && audio.duration - audio.currentTime < 0.3) {
+      nextSong(true);
+    }
+
+    if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+      try {
+        navigator.mediaSession.setPositionState({
+          duration: audio.duration,
+          playbackRate: audio.playbackRate,
+          position: audio.currentTime
+        });
+      } catch (e) {}
+    }
+  }
 });
 
 audio.addEventListener('loadedmetadata', () => {
@@ -496,58 +800,42 @@ audio.addEventListener('loadedmetadata', () => {
   updateMediaSession();
 });
 
-audio.addEventListener('playing', () => {
-  // Playback thực sự bắt đầu — reset guard cho lần kết thúc sắp tới
-  endGuard = false;
-  isPlaying = true;
-  updatePlayStateUI(true);
-  const s = playlist[currentIndex];
-  if (s) songArtist.textContent = s.artist || 'Không rõ';
-});
-
-audio.addEventListener('pause', () => {
-  // Chỉ cập nhật UI là paused nếu KHÔNG phải đang chuyển bài
-  if (endGuard) return;
-  if (!isPlaying) return;
-  isPlaying = false;
-  updatePlayStateUI(false);
-  releaseWakeLock();
-});
-
+// ENDED — GỌI ĐỒNG BỘ, KHÔNG setTimeout
 audio.addEventListener('ended', () => {
-  // Xử lý kết thúc bài — advance sẽ tự kiểm tra endGuard
-  advance(true);
+  if (hasTriggeredEnd) return;
+  if (repeatMode === 'one') {
+    audio.currentTime = 0;
+    playSong();
+  } else {
+    nextSong(true);
+  }
 });
 
+// STALLED — KHÔNG reload bài, chỉ retry play()
+audio.addEventListener('stalled', () => {
+  if (isPlaying && audio.paused) {
+    const p = audio.play();
+    if (p) p.catch(() => {});
+  }
+});
+
+audio.addEventListener('play', () => setPlayingState(true));
+audio.addEventListener('pause', () => {
+  // Chỉ cập nhật UI khi thực sự pause (không phải chuyển bài)
+  if (!hasTriggeredEnd) setPlayingState(false);
+});
 audio.addEventListener('error', () => {
-  endGuard = false;
-  console.warn('Audio error:', audio.error);
   songTitle.textContent = '⚠️ Lỗi tải file';
-  songArtist.textContent = 'Kiểm tra kết nối mạng';
-  isPlaying = false;
-  updatePlayStateUI(false);
+  songArtist.textContent = 'Kiểm tra link MP3';
+  setPlayingState(false);
 });
-
-audio.addEventListener('waiting', () => { songArtist.textContent = '⏳ Đang tải...'; });
+audio.addEventListener('waiting', () => songArtist.textContent = '⏳ Đang tải...');
 audio.addEventListener('canplay', () => {
   const s = playlist[currentIndex];
   if (s) songArtist.textContent = s.artist || 'Không rõ';
 });
 
-document.addEventListener('visibilitychange', async () => {
-  if (wakeLock !== null && document.visibilityState === 'visible') {
-    await requestWakeLock();
-  }
-  if (document.visibilityState === 'visible') {
-    const actually = !audio.paused && !audio.ended && !endGuard;
-    if (isPlaying !== actually) {
-      isPlaying = actually;
-      updatePlayStateUI(actually);
-    }
-  }
-});
-
-// ============ SEEK ============
+// SEEK
 function seekFromEvent(e) {
   const rect = progressBar.getBoundingClientRect();
   const x = e.touches ? e.touches[0].clientX : e.clientX;
@@ -565,7 +853,7 @@ progressBar.addEventListener('touchstart', (e) => { isSeeking = true; progressBa
 progressBar.addEventListener('touchmove', (e) => { if (isSeeking) seekFromEvent(e); }, { passive: true });
 progressBar.addEventListener('touchend', () => { isSeeking = false; progressBar.classList.remove('dragging'); });
 
-// ============ SHUFFLE / REPEAT ============
+// SHUFFLE / REPEAT
 shuffleBtn.addEventListener('click', () => {
   shuffleMode = !shuffleMode;
   shuffleBtn.classList.toggle('active', shuffleMode);
@@ -580,36 +868,46 @@ repeatBtn.addEventListener('click', () => {
     : '<path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/>';
 });
 
-// ============ OVERLAY ============
+// OVERLAY AUTOPLAY
 function showUnmuteOverlay() { unmuteOverlay.classList.add('show'); }
 function hideUnmuteOverlay() { unmuteOverlay.classList.remove('show'); }
 unmuteBtn.addEventListener('click', () => { hideUnmuteOverlay(); playSong(); });
 
-// ============ KEYBOARD ============
+// KEYBOARD
 document.addEventListener('keydown', (e) => {
   if (e.target.matches('input, textarea')) return;
   if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
-  if (e.code === 'ArrowRight') { e.preventDefault(); endGuard = false; advance(false); }
-  if (e.code === 'ArrowLeft') { e.preventDefault(); prevBtn.click(); }
+  if (e.code === 'ArrowRight') { e.preventDefault(); nextSong(false); }
+  if (e.code === 'ArrowLeft') { e.preventDefault(); prevSong(); }
 });
 
-// ============ PWA ============
+// PWA INSTALL
 let deferredPrompt = null;
 let installBtnShown = false;
+
 function isStandalone() {
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  return window.matchMedia('(display-mode: standalone)').matches
+      || window.navigator.standalone === true;
 }
+
 function showInstallBtn() {
   if (installBtnShown || isStandalone()) return;
   installBtnShown = true;
   installBtn.classList.add('show');
 }
-window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; showInstallBtn(); });
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBtn();
+});
+
 window.addEventListener('appinstalled', () => {
   installBtn.classList.remove('show');
   installTooltip.classList.remove('show');
   deferredPrompt = null;
 });
+
 setTimeout(() => {
   if (!deferredPrompt && !isStandalone()) {
     showInstallBtn();
@@ -617,33 +915,34 @@ setTimeout(() => {
     setTimeout(() => installTooltip.classList.remove('show'), 6000);
   }
 }, 4000);
+
 installBtn.addEventListener('click', async () => {
   installTooltip.classList.remove('show');
   if (deferredPrompt) {
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') installBtn.classList.remove('show');
+    if (outcome === 'accepted') {
+      installBtn.classList.remove('show');
+    }
     deferredPrompt = null;
   } else {
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
-    alert(isIOS
-      ? '📱 Trên iPhone/iPad:\n1. Nhấn Chia sẻ (⬆️) trên Safari\n2. Chọn "Thêm vào màn hình chính"\n3. Nhấn "Thêm"'
-      : '📱 Trên Android:\n1. Menu trình duyệt (⋮)\n2. Chọn "Cài đặt ứng dụng"');
+    const msg = isIOS
+      ? '📱 Để cài đặt trên iPhone/iPad:\n\n1. Nhấn vào biểu tượng Chia sẻ (⬆️) trên Safari\n2. Chọn "Thêm vào màn hình chính"\n3. Nhấn "Thêm"'
+      : '📱 Để cài đặt:\n\n1. Mở menu trình duyệt (⋮)\n2. Chọn "Thêm vào màn hình chính" hoặc "Cài đặt ứng dụng"\n3. Nhấn "Cài đặt"';
+    alert(msg);
   }
 });
 
-// ============ INIT ============
+// INIT
 function init() {
   renderPlaylist();
   if (playlist.length > 0) {
-    const s = playlist[0];
-    songTitle.textContent = s.title;
-    songArtist.textContent = s.artist || 'Không rõ';
-    audio.src = s.url;
-    audio.load();
-    updatePlaylistUI();
-    updateMediaSession();
-    if (CONFIG.autoPlay) playSong();
+    loadSong(0, false);
+    if (CONFIG.autoPlay) {
+      // Thử play ngay; nếu bị chặn sẽ hiện overlay
+      playSong();
+    }
   }
 }
 init();
