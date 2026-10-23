@@ -486,7 +486,14 @@ const playlist = CONFIG.songs.map((s, i) => ({
 }));
 
 // DOM
-const audio = document.getElementById('audio');
+const audioA = document.getElementById('audio');
+const audioB = new Audio();
+audioB.preload = 'auto';
+audioB.crossOrigin = 'anonymous';
+audioB.setAttribute('playsinline', '');
+audioB.style.display = 'none';
+document.body.appendChild(audioB);
+let audio = audioA; // thẻ đang phát; thẻ còn lại nạp sẵn bài kế
 const playBtn = document.getElementById('playBtn');
 const playIcon = document.getElementById('playIcon');
 const prevBtn = document.getElementById('prevBtn');
@@ -524,7 +531,69 @@ let hasTriggeredEnd = false;
 const blobCache = new Map();
 let nextShuffleIdx = null;
 
-audio.volume = CONFIG.defaultVolume;
+audioA.volume = CONFIG.defaultVolume;
+audioB.volume = CONFIG.defaultVolume;
+
+// Gắn sự kiện cho cả 2 thẻ, chỉ xử lý sự kiện của thẻ đang phát
+function bindAudio(type, fn) {
+  [audioA, audioB].forEach(el => el.addEventListener(type, (e) => {
+    if (el !== audio) return;
+    fn(e);
+  }));
+}
+
+// Mồi thẻ thứ 2 trong lần bấm đầu tiên (iOS/Android cho phép play() sau này khi khóa màn hình)
+let primed = false, priming = false;
+function makeSilentWav() {
+  const n = 800, b = new Uint8Array(44 + n), dv = new DataView(b.buffer);
+  const w = (o, t) => [...t].forEach((c, i) => b[o + i] = c.charCodeAt(0));
+  w(0, 'RIFF'); dv.setUint32(4, 36 + n, true); w(8, 'WAVE'); w(12, 'fmt ');
+  dv.setUint32(16, 16, true); dv.setUint16(20, 1, true); dv.setUint16(22, 1, true);
+  dv.setUint32(24, 8000, true); dv.setUint32(28, 8000, true); dv.setUint16(32, 1, true);
+  dv.setUint16(34, 8, true); w(36, 'data'); dv.setUint32(40, n, true); b.fill(128, 44);
+  return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+}
+function primeIdle() {
+  if (primed || priming) return;
+  const idle = audio === audioA ? audioB : audioA;
+  priming = true;
+  idle.muted = true;
+  idle.src = makeSilentWav();
+  idle.dataset.ready = '0';
+  const done = (ok) => {
+    try { idle.pause(); } catch (e) {}
+    idle.muted = false;
+    priming = false;
+    primed = ok;
+    prepareIdle();
+  };
+  const p = idle.play();
+  if (p) p.then(() => done(true)).catch(() => done(false)); else done(true);
+}
+
+// Nạp sẵn bài kế vào thẻ đang rảnh
+function prepareIdle() {
+  if (priming || playlist.length < 2) return;
+  const idle = audio === audioA ? audioB : audioA;
+  let nextIdx;
+  if (shuffleMode) {
+    if (nextShuffleIdx === null || nextShuffleIdx === currentIndex) {
+      let r, a = 0;
+      do { r = Math.floor(Math.random() * playlist.length); a++; } while (r === currentIndex && a < 20);
+      nextShuffleIdx = r;
+    }
+    nextIdx = nextShuffleIdx;
+  } else {
+    nextIdx = (currentIndex + 1) % playlist.length;
+  }
+  const blob = blobCache.get(playlist[nextIdx].url);
+  if (!blob) return;
+  if (idle.dataset.ready === '1' && idle.dataset.idx === String(nextIdx)) return;
+  idle.src = blob;
+  idle.load();
+  idle.dataset.idx = String(nextIdx);
+  idle.dataset.ready = '1';
+}
 const ICONS = { play: '<path d="M8 5v14l11-7z"/>', pause: '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>' };
 
 // Wake Lock
@@ -595,6 +664,7 @@ async function prefetch(idx) {
     blobCache.set(url, URL.createObjectURL(blob));
   } catch (e) {}
   updateCacheUI();
+  prepareIdle();
 }
 
 let prefetching = false;
@@ -639,19 +709,35 @@ function loadSong(index, autoPlay = false) {
   totalTimeEl.textContent = '0:00';
 
   // Gán src + load + (play) đồng bộ
-  audio.src = blobCache.get(song.url) || song.url;
-  audio.load();
+  const idleEl = audio === audioA ? audioB : audioA;
+  const cached = blobCache.get(song.url);
+  if (autoPlay && cached && idleEl.dataset.ready === '1' && idleEl.dataset.idx === String(index)) {
+    // Chuyển sang thẻ đã nạp sẵn: không đổi src trên thẻ đang phát
+    const old = audio;
+    audio = idleEl;
+    audio.volume = old.volume;
+    audio.currentTime = 0;
+    try { old.pause(); } catch (e) {}
+    if (isFinite(audio.duration)) totalTimeEl.textContent = formatTime(audio.duration);
+  } else {
+    audio.src = cached || song.url;
+    audio.dataset.idx = String(index);
+    audio.dataset.ready = '1';
+    audio.load();
+  }
 
   updatePlaylistUI();
   updateMediaSession();
 
   if (autoPlay) playSong();
   prefetchAhead();
+  prepareIdle();
   armWatchdog();
 }
 
 function playSong() {
   if (playlist.length === 0) return;
+  primeIdle();
   hasTriggeredEnd = false;
   const p = audio.play();
   if (p !== undefined) {
@@ -778,7 +864,7 @@ playBtn.addEventListener('click', togglePlay);
 nextBtn.addEventListener('click', () => nextSong(false));
 prevBtn.addEventListener('click', prevSong);
 
-audio.addEventListener('timeupdate', () => {
+bindAudio('timeupdate', () => {
   if (!isSeeking && audio.duration && isFinite(audio.duration)) {
     progressFill.style.width = (audio.currentTime / audio.duration * 100) + '%';
     currentTimeEl.textContent = formatTime(audio.currentTime);
@@ -800,13 +886,13 @@ audio.addEventListener('timeupdate', () => {
   }
 });
 
-audio.addEventListener('loadedmetadata', () => {
+bindAudio('loadedmetadata', () => {
   totalTimeEl.textContent = formatTime(audio.duration);
   updateMediaSession();
 });
 
 // ENDED — GỌI ĐỒNG BỘ, KHÔNG setTimeout
-audio.addEventListener('ended', () => {
+bindAudio('ended', () => {
   if (hasTriggeredEnd) return;
   if (repeatMode === 'one') {
     audio.currentTime = 0;
@@ -817,26 +903,26 @@ audio.addEventListener('ended', () => {
 });
 
 // STALLED — KHÔNG reload bài, chỉ retry play()
-audio.addEventListener('stalled', () => {
+bindAudio('stalled', () => {
   if (isPlaying && audio.paused) {
     const p = audio.play();
     if (p) p.catch(() => {});
   }
 });
 
-audio.addEventListener('play', () => setPlayingState(true));
-audio.addEventListener('pause', () => {
+bindAudio('play', () => setPlayingState(true));
+bindAudio('pause', () => {
   // Chỉ cập nhật UI khi thực sự pause (không phải chuyển bài)
   if (audio.ended || hasTriggeredEnd) return;
   setPlayingState(false);
 });
-audio.addEventListener('error', () => {
+bindAudio('error', () => {
   songTitle.textContent = '⚠️ Lỗi tải file';
   songArtist.textContent = 'Kiểm tra link MP3';
   setPlayingState(false);
 });
-audio.addEventListener('waiting', () => songArtist.textContent = '⏳ Đang tải...');
-audio.addEventListener('canplay', () => {
+bindAudio('waiting', () => songArtist.textContent = '⏳ Đang tải...');
+bindAudio('canplay', () => {
   const s = playlist[currentIndex];
   if (s) songArtist.textContent = s.artist || 'Không rõ';
 });
@@ -866,6 +952,7 @@ shuffleBtn.addEventListener('click', () => {
   history = [];
   nextShuffleIdx = null;
   prefetchAhead();
+  prepareIdle();
 });
 repeatBtn.addEventListener('click', () => {
   const modes = ['none', 'all', 'one'];
