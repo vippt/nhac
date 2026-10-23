@@ -579,43 +579,50 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// PRELOAD các bài kế dạng blob
+// PRELOAD TOÀN BỘ playlist dạng blob (tuần tự, bắt đầu từ bài đang phát)
+function updateCacheUI() {
+  const n = [...blobCache.values()].filter(Boolean).length;
+  playlistCount.textContent = playlist.length + (n >= playlist.length ? ' ✓ đã tải hết' : ' (đã tải ' + n + '/' + playlist.length + ')');
+}
+
 async function prefetch(idx) {
   const url = playlist[idx].url;
-  if (blobCache.has(url)) return;
-  blobCache.set(url, null);
+  if (blobCache.get(url)) return;
   try {
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const blob = await res.blob();
     blobCache.set(url, URL.createObjectURL(blob));
-  } catch (e) {
-    blobCache.delete(url);
-  }
+  } catch (e) {}
+  updateCacheUI();
 }
 
-function prefetchAhead() {
-  if (playlist.length < 2) return;
-  const idxs = [currentIndex];
-  if (shuffleMode) {
-    if (nextShuffleIdx === null || nextShuffleIdx === currentIndex) {
-      let r, a = 0;
-      do { r = Math.floor(Math.random() * playlist.length); a++; } while (r === currentIndex && a < 20);
-      nextShuffleIdx = r;
+let prefetching = false;
+async function prefetchAhead() {
+  if (prefetching) return;
+  prefetching = true;
+  try {
+    for (let k = 0; k < playlist.length; k++) {
+      await prefetch((currentIndex + k) % playlist.length);
     }
-    idxs.push(nextShuffleIdx);
-  } else {
-    idxs.push((currentIndex + 1) % playlist.length);
-    idxs.push((currentIndex + 2) % playlist.length);
-  }
-  const keep = new Set(idxs.map(i => playlist[i].url));
-  idxs.forEach(i => { if (i !== currentIndex) prefetch(i); });
-  for (const [url, blobUrl] of blobCache) {
-    if (!keep.has(url)) {
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
-      blobCache.delete(url);
+  } finally { prefetching = false; }
+}
+
+// Watchdog: nếu bài kẹt "đang tải" quá lâu thì thử lại 1 lần rồi nhảy bài
+let stuckTimer = null;
+function armWatchdog() {
+  clearTimeout(stuckTimer);
+  const idx = currentIndex;
+  stuckTimer = setTimeout(() => {
+    if (idx !== currentIndex || !isPlaying) return;
+    if (audio.readyState < 3 || audio.paused) {
+      audio.load();
+      const p = audio.play(); if (p) p.catch(() => {});
+      stuckTimer = setTimeout(() => {
+        if (idx === currentIndex && (audio.readyState < 3 || audio.paused)) nextSong(true);
+      }, 10000);
     }
-  }
+  }, 12000);
 }
 
 // LOAD / PLAY / PAUSE — SYNC HOÀN TOÀN, KHÔNG setTimeout
@@ -640,6 +647,7 @@ function loadSong(index, autoPlay = false) {
 
   if (autoPlay) playSong();
   prefetchAhead();
+  armWatchdog();
 }
 
 function playSong() {
